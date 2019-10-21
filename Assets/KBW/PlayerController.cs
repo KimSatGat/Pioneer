@@ -27,9 +27,7 @@ public class PlayerController : MonoBehaviour
     // 조이스틱 입력값 받아오기
     public void HandleInput()
     {
-        float h = joystick.GetHorizontalValue();
-        float v = joystick.GetVerticalValue();
-        Vector3 moveDir = new Vector3(h, v, 0).normalized;
+        Vector2 moveDir = joystick.GetPlayerDir();
 
         moveVector = moveDir;
     }

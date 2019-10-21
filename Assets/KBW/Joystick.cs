@@ -1,70 +1,70 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.EventSystems;
 
-public class Joystick : MonoBehaviour, IDragHandler, IPointerUpHandler, IPointerDownHandler
-{
-    private Image bgImg;
-    private Image joystickImg;
-    private Vector3 inputVector;
-    
-    void Start()
+public class Joystick : MonoBehaviour
+{        
+    public GameObject circle, dot;
+
+    private Touch oneTouch;
+    private Vector2 touchPosition;
+    private Vector2 moveDirection;
+
+    private void Start()
     {
-        bgImg = GetComponent<Image>();
-        joystickImg = transform.GetChild(0).GetComponent<Image>();
+        circle.SetActive(false);
+        dot.SetActive(false);
     }
 
-    void Update()
+    private void Update()
     {
-        
-    }
-
-    // 터치패드를 누르고 있을 때
-    public virtual void OnDrag(PointerEventData ped)
-    {
-        Debug.Log("Joystick: OnDrag()");
-
-        Vector2 pos;
-
-        if(RectTransformUtility.ScreenPointToLocalPointInRectangle(bgImg.rectTransform, ped.position, ped.pressEventCamera, out pos))
+        if(Input.touchCount > 0)
         {
-            pos.x = (pos.x / bgImg.rectTransform.sizeDelta.x);
-            pos.y = (pos.y / bgImg.rectTransform.sizeDelta.y);
+            oneTouch = Input.GetTouch(0);
 
-            inputVector = new Vector3(pos.x * 2 + 1, pos.y * 2 + 1, 0);
-            inputVector = (inputVector.magnitude > 1.0f) ? inputVector.normalized : inputVector;
+            touchPosition = Camera.main.ScreenToWorldPoint(oneTouch.position);
 
-            // 조이스틱 이미지 이동
-            joystickImg.rectTransform.anchoredPosition = new Vector3(inputVector.x * (bgImg.rectTransform.sizeDelta.x / 3)
-                , inputVector.y * (bgImg.rectTransform.sizeDelta.y / 3));
+            switch(oneTouch.phase)
+            {
+                case TouchPhase.Began:
+                    circle.SetActive(true);
+                    dot.SetActive(true);
 
+                    circle.transform.position = touchPosition;
+                    dot.transform.position = touchPosition;
+                    break;
+                case TouchPhase.Stationary:
+                    SetPlayerDir();
+                    break;
+                case TouchPhase.Moved:
+                    SetPlayerDir();
+                    break;
+                case TouchPhase.Ended:
+                    circle.SetActive(false);
+                    dot.SetActive(false);
+                    moveDirection = Vector2.zero;
+                    break;
+            }
         }
     }
 
-    // 터치하고 있을 때
-    public virtual void OnPointerDown(PointerEventData ped)
+    private void SetPlayerDir()
     {
-        OnDrag(ped);
+        dot.transform.position = touchPosition;
+
+        dot.transform.position = new Vector2(
+            Mathf.Clamp(dot.transform.position.x,
+            circle.transform.position.x - 0.7f,
+            circle.transform.position.x + 0.7f),
+            Mathf.Clamp(dot.transform.position.y,
+            circle.transform.position.y - 0.7f,
+            circle.transform.position.y + 0.7f));
+
+        moveDirection = (dot.transform.position - circle.transform.position).normalized;        
     }
 
-    // 터치를 중지할 때
-    public virtual void OnPointerUp(PointerEventData ped)
+    public Vector2 GetPlayerDir()
     {
-        inputVector = Vector3.zero;
-        joystickImg.rectTransform.anchoredPosition = Vector3.zero;
-    }
-
-    // PlayerController 스크립트에서 inputVector.x 값을 받기 위해 사용될 함수
-    public float GetHorizontalValue()
-    {
-        return inputVector.x;
-    }
-
-    // PlayerController 스크립트에서 inputVector.y 값을 받기 위해 사용될 함수
-    public float GetVerticalValue()
-    {
-        return inputVector.y;
+        return moveDirection;
     }
 }
