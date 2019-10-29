@@ -654,6 +654,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: melee_player_01
       objectReference: {fileID: 0}
+    - target: {fileID: 1063387889929877, guid: f3d7531dd34e1c841b1f3a740417da4c, type: 3}
+      propertyPath: m_TagString
+      value: Player
+      objectReference: {fileID: 0}
     - target: {fileID: 4609134763403435, guid: f3d7531dd34e1c841b1f3a740417da4c, type: 3}
       propertyPath: m_LocalPosition.x
       value: -3.4
@@ -698,6 +702,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4609134763403435, guid: f3d7531dd34e1c841b1f3a740417da4c, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1532470361676067, guid: f3d7531dd34e1c841b1f3a740417da4c, type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -710,6 +718,11 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 95412965316536605, guid: f3d7531dd34e1c841b1f3a740417da4c,
+        type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 7319c1c0578e52a47a268e8720a267e1, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f3d7531dd34e1c841b1f3a740417da4c, type: 3}
 --- !u!1 &1626761458 stripped
@@ -766,7 +779,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: -0.05034423, y: 0.96611476}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -777,5 +790,5 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 1.4631667, y: 2.207644}
   m_EdgeRadius: 0
