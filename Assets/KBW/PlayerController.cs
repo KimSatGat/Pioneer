@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    enum PlayerState { IDLE, RUN, ATTACK};    
+    enum PlayerState { IDLE, RUN, ATTACK, DIE};
 
     public Joystick joystick;       // 조이스틱
     public float moveSpeed;         // 플레이어 이동속도

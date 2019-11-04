@@ -6,12 +6,12 @@ using UnityEngine;
 
 public class LivingObject : MonoBehaviour, IDamageable
 {
-    public float startingHP = 100f;             // 시작 체력
-    public float HP { get; protected set; }     // 현재 체력
-    public float damage { get; protected set; } // 공격력 
-    public float speed { get; protected set; }  // 이동 속도
-    public bool dead { get; protected set; }    // 사망 상태
-    public event Action onDeath;                // 사망시 발동할 이벤트
+    public float startingHP = 100f; // 시작 체력
+    public float HP;                // 현재 체력
+    public float damage;            // 공격력 
+    public float speed;             // 이동 속도
+    public bool dead;               // 사망 상태
+    public event Action onDeath;    // 사망시 발동할 이벤트
 
     // 생명체가 활성화될때 상태를 리셋
     protected virtual void OnEnable()
