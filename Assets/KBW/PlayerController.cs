@@ -4,30 +4,40 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    enum PlayerState { IDLE, RUN, ATTACK};
+    enum PlayerState { IDLE, RUN, ATTACK};    
 
-    public Joystick joystick;   // 조이스틱
-    public float moveSpeed;     // 플레이어 이동속도
-    public float attackSpeed;   // 플레이어 공격속도
-    public Transform attackRange;
+    public Joystick joystick;       // 조이스틱
+    public float moveSpeed;         // 플레이어 이동속도
+    public float attackSpeed;       // 플레이어 공격속도
+    public Transform attackPoint;   // 공격 지점
+    public Vector2 attackRange;     // 공격 범위
 
-    private PlayerState playerState; // 플레이어 상태
+    private PlayerState playerState;    // 플레이어 상태
+    private Vector2 playerDir;  // 플레이어 방향
+    
     private Vector3 moveVector; // 플레이어 이동벡터
-    private Animator animator;  // 플레이어 애니메이터
-                
+    private Animator animator;  // 플레이어 애니메이터    
+    private Rigidbody2D rigidbody2D;
+
+
+    private void Awake()
+    {
+        playerState = PlayerState.IDLE;     // 플레이어 상태 초기화
+        playerDir = Vector2.right;
+        moveVector = Vector3.zero;          // 플레이어 이동벡터 초기화
+        attackSpeed = 1f;
+        
+        animator = GetComponent<Animator>();
+        rigidbody2D = GetComponent<Rigidbody2D>();
+    }
+
     void Start()
     {        
-        playerState = PlayerState.IDLE;  // 플레이어 상태 초기화
-        moveVector = Vector3.zero;       // 플레이어 이동벡터 초기화
-        attackSpeed = 1f;
-
-        animator = GetComponent<Animator>();
-
-        StartCoroutine("PlayerEnemyDetect");
+        StartCoroutine("Attack");
     }
 
     void Update()
-    {        
+    {                
         HandleInput();
     }
 
@@ -47,8 +57,9 @@ public class PlayerController : MonoBehaviour
 
     // 플레이어 이동    
     private void PlayerMove()
-    {
-        transform.Translate(moveVector * moveSpeed * Time.deltaTime);
+    {        
+        //transform.Translate(moveVector * moveSpeed * Time.deltaTime);  기존에 썻던 좌표값 변화를 통한 이동방식 -> 회전 했을때 반대 방향으로 가서 아래 방법을 씀
+        rigidbody2D.velocity = new Vector2(moveVector.x, moveVector.y);
     }
 
     // 플레이어 애니메이션
@@ -57,14 +68,17 @@ public class PlayerController : MonoBehaviour
         // 오른쪽 이동
         if(moveVector.x > 0)
         {
-            transform.localScale = new Vector3(1f, 1f, 1f);
             playerState = PlayerState.RUN;
+            playerDir = Vector2.right;
+            transform.rotation = new Quaternion(0f, 0f, 0f, 0f);
+
         }
         // 왼쪽 이동
         else if(moveVector.x < 0)
         {
-            transform.localScale = new Vector3(-1f, 1f, 1f);
             playerState = PlayerState.RUN;
+            playerDir = Vector2.left;
+            transform.rotation = new Quaternion(0f, 180f, 0f, 0f);
         }
         else if(playerState == PlayerState.ATTACK)
         {
@@ -84,29 +98,31 @@ public class PlayerController : MonoBehaviour
     {
         // Draw a yellow sphere at the transform's position
         Gizmos.color = Color.yellow;
-        Gizmos.DrawCube(attackRange.position, new Vector2(2f, 2f));
+        Gizmos.DrawCube(attackPoint.position, attackRange);
     }
 
-    // 공격 범위에 적이 있는지 감지
-    IEnumerator PlayerEnemyDetect()
+    // 공격
+    IEnumerator Attack()
     {
         while(true)
         {
-            RaycastHit2D hit = Physics2D.BoxCast(
-                attackRange.position,                       // 시작 위치
-                new Vector2(2f, 2f),                        // 상자 크기
-                0f,                                         // 회전 각도
-                new Vector2(transform.position.x, 0f),      // 방향
-                2.5f                                        // 최대 거리
-                );
-
-            if(hit.collider.tag == "Enemy" && moveVector.x == 0)
+            Collider2D hit = Physics2D.OverlapBox(attackPoint.position, attackRange, 0f);
+            
+            if(hit)
             {
-                playerState = PlayerState.ATTACK;
-                animator.SetInteger("State", (int)playerState);
+                if(hit.tag == "Enemy" && moveVector.x == 0f)
+                {
+                    playerState = PlayerState.ATTACK;
+                    animator.SetInteger("State", (int)playerState);
+                    Debug.Log("적 감지");
+                }
+
             }
-        
-            Debug.Log(hit.collider.tag);
+            else
+            {
+                Debug.Log("적 미발견");
+            }
+
             yield return new WaitForSeconds(attackSpeed);
         }
     }
@@ -114,24 +130,20 @@ public class PlayerController : MonoBehaviour
     // 공격 모션이 끝 -> 적이 있다면 데미지 적용, 원래 상태로 복귀
     public void EndAttack()
     {
-        // 적이 있는지 확인
-        RaycastHit2D hit = Physics2D.BoxCast(
-                attackRange.position,                       // 시작 위치
-                new Vector2(2f, 2f),                        // 상자 크기
-                0f,                                         // 회전 각도
-                new Vector2(transform.position.x, 0f),      // 방향
-                2.5f                                        // 최대 거리
-                );
-
-        // 공격 범위에 적이 있다면
-        if (hit.collider.tag == "Enemy")
+        Collider2D[] collider2Ds = Physics2D.OverlapBoxAll(attackPoint.position, attackRange, 0f);
+        if(collider2Ds.Length > 0)
         {
-            Debug.Log("적 공격!");
+            foreach (Collider2D collider in collider2Ds)
+            {
+                if(collider.tag == "Enemy")
+                {
+                    Debug.Log("적 공격!");
+                }
+            }
         }
     
         // 원래 상태로 복귀
         playerState = PlayerState.IDLE;
         animator.SetInteger("State", (int)playerState);
     }
-
 }

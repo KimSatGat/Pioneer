@@ -21,9 +21,17 @@ public class GameManager : MonoBehaviour
         
     }
 
-    // 해상도 설정
+    // 해상도, 가로 모드 설정
     void SettingResolution()
     {
-        Screen.SetResolution(Screen.width, Screen.width * 16 / 9, true);
+        // 해상도 설정
+        Screen.SetResolution(Screen.width, Screen.width * 16 / 9, true); 
+
+        // 가로 모드 설정
+        Screen.orientation = ScreenOrientation.AutoRotation;
+        Screen.autorotateToPortrait = false;
+        Screen.autorotateToPortraitUpsideDown = false;
+        Screen.autorotateToLandscapeLeft = true;
+        Screen.autorotateToLandscapeRight = true;
     }
 }
