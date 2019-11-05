@@ -12492,6 +12492,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de8bf317734d3fc41a64ed586b0422d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  startingHP: 100
+  HP: 0
+  damage: 0
+  speed: 0
+  dead: 0
   joystick: {fileID: 0}
   moveSpeed: 3
   attackSpeed: 1

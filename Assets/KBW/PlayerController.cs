@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : LivingObject
 {
     enum PlayerState { IDLE, RUN, ATTACK, DIE};
 
@@ -137,6 +137,8 @@ public class PlayerController : MonoBehaviour
             {
                 if(collider.tag == "Enemy")
                 {
+                    LivingObject livingObject = collider.GetComponent<LivingObject>();
+                    livingObject.OnDamage(damage);
                     Debug.Log("적 공격!");
                 }
             }

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Demon_Melee : LivingObject
 {
-    enum EnemyState { IDLE, TRACE, ATTACK, DIE, GAUGING };
+    enum EnemyState { IDLE, TRACE, ATTACK, DIE, GAUGING};
 
     private Coroutine findNearPlayer;   // 추적 코루틴 변수    
     private Coroutine myUpdate;         // Update 코루틴 변수
@@ -12,19 +12,23 @@ public class Demon_Melee : LivingObject
     private Player[] players;           // 추적할 플레이어 리스트
     private Player target;              // 가장 가까운 플레이어
     private EnemyState enemyState;      // 적 상태
-    
+
+    public GameObject attackUI;         // 공격 UI
     public RectTransform attackGauge;   // 공격게이지 UI
     public Transform attackPoint;       // 공격 지점
     public Vector2 attackRange;         // 공격 범위
 
     private float attackGaugeValue;     // 공격UI 게이지 값
     private float maxGauge;             // 공격UI 최대 게이지 값
+    private Material material;
+    private Color materialTintColor;
 
     private Animator animator;
-    private Rigidbody2D rigidbody2D;
+    private Rigidbody2D rigidbody2D;    
 
     protected override void OnEnable()
     {
+        // InitObject()
         base.OnEnable();
     }
 
@@ -47,15 +51,16 @@ public class Demon_Melee : LivingObject
 
         animator = GetComponent<Animator>();
         rigidbody2D = GetComponent<Rigidbody2D>();
+        material = GetComponent<SpriteRenderer>().material;
 
+        materialTintColor = new Color(1f, 0f, 0f, 150f / 255f);
     }
 
     void Start()
     {
         findNearPlayer = StartCoroutine(FindNearPlayer(10f)); // 추적 코루틴 변수에 할당, 10초 마다 실행
-        myUpdate = StartCoroutine(MyUpdate());
+        myUpdate = StartCoroutine(MyUpdate());        
     }
-        
 
     IEnumerator MyUpdate()
     {
@@ -88,7 +93,7 @@ public class Demon_Melee : LivingObject
 
         // 공격 모션               
         animator.SetInteger("State", (int)enemyState);
-        rigidbody2D.velocity = new Vector2(0f, 0f);
+        rigidbody2D.velocity = new Vector2(0f, 0f);        
     }
 
 
@@ -179,7 +184,7 @@ public class Demon_Melee : LivingObject
         {            
             attackGauge.sizeDelta = new Vector2(0f, 1.8f);
             attackGaugeValue = 0f;
-            animator.speed = 1f;
+            animator.speed = 1f;            
             enemyState = EnemyState.ATTACK;
             return;
         }
@@ -188,12 +193,14 @@ public class Demon_Melee : LivingObject
         attackGaugeValue += 0.1f;                                
     }
 
+    // Attack 애니메이션 이벤트 함수 -> 공격 게이지 시작
     public void StartAttackGauge()
     {
         animator.speed = 0f;
         enemyState = EnemyState.GAUGING;
     }
 
+    // Attack 애니메이션 이벤트 함수 -> 공격 끝 -> 범위 내 플레이어에게 데미지 적용
     public void EndAttack() 
     {
         Collider2D[] hits = Physics2D.OverlapBoxAll(attackPoint.position, attackRange, 0f);
@@ -251,5 +258,47 @@ public class Demon_Melee : LivingObject
             // 이동            
             rigidbody2D.velocity = moveDir * speed * Time.deltaTime;
         }
+    }
+
+    public override void OnDamage(float damage)
+    {        
+
+        // 체력 감소
+        base.OnDamage(damage);
+
+        // 피격 효과
+        StartCoroutine(SetTintColor());
+    }
+    
+    // 틴트 효과
+    IEnumerator SetTintColor()
+    {        
+        while(true)
+        {            
+            if(materialTintColor.a > 0)
+            {
+                materialTintColor.a = Mathf.Clamp01(materialTintColor.a - 6f * Time.deltaTime);
+                
+                material.SetColor("_Tint", materialTintColor);
+            }
+            else
+            {
+                materialTintColor = new Color(1f, 0f, 0f, 150f / 255f);                
+                StopCoroutine(SetTintColor());                
+                break;
+            }          
+
+            yield return new WaitForSeconds(0.1f);
+        }
+    }
+
+
+    public void OnAttackUI()
+    {
+        attackUI.SetActive(true);
+    }
+    public void OffAttackUI()
+    {
+        attackUI.SetActive(false);
     }
 }

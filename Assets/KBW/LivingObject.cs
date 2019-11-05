@@ -12,7 +12,7 @@ public class LivingObject : MonoBehaviour, IDamageable
     public float speed;             // 이동 속도
     public bool dead;               // 사망 상태
     public event Action onDeath;    // 사망시 발동할 이벤트
-
+    SpriteRenderer spriteRenderer;
     // 생명체가 활성화될때 상태를 리셋
     protected virtual void OnEnable()
     {        
