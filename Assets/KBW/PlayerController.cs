@@ -7,8 +7,6 @@ public class PlayerController : LivingObject
     enum PlayerState { IDLE, RUN, ATTACK, DIE};
 
     public Joystick joystick;       // 조이스틱
-    public float moveSpeed;         // 플레이어 이동속도
-    public float attackSpeed;       // 플레이어 공격속도
     public Transform attackPoint;   // 공격 지점
     public Vector2 attackRange;     // 공격 범위
 
@@ -52,7 +50,7 @@ public class PlayerController : LivingObject
     {
         Vector2 moveDir = joystick.GetPlayerDir();
 
-        moveVector = moveDir;        
+        moveVector = moveDir;
     }
 
     // 플레이어 이동    
@@ -138,7 +136,7 @@ public class PlayerController : LivingObject
                 if(collider.tag == "Enemy")
                 {
                     LivingObject livingObject = collider.GetComponent<LivingObject>();
-                    livingObject.OnDamage(damage);
+                    livingObject.OnDamage(10);      // 10 값은 테스트용 -> 바꿔야함
                     Debug.Log("적 공격!");
                 }
             }

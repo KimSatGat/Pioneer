@@ -9,7 +9,9 @@ public class LivingObject : MonoBehaviour, IDamageable
     public float startingHP = 100f; // 시작 체력
     public float HP;                // 현재 체력
     public float damage;            // 공격력 
-    public float speed;             // 이동 속도
+    public float moveSpeed;         // 이동 속도
+    public float attackSpeed;       // 공격 속도
+    public int dir;                 // 바라보는 방향 오른쪽: 1 왼쪽: -1
     public bool dead;               // 사망 상태
     public event Action onDeath;    // 사망시 발동할 이벤트
     SpriteRenderer spriteRenderer;

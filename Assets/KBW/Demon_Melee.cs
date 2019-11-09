@@ -1,30 +1,33 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Demon_Melee : LivingObject
 {
     enum EnemyState { IDLE, TRACE, ATTACK, DIE, GAUGING};
 
-    private Coroutine findNearPlayer;   // 추적 코루틴 변수    
+    private Coroutine findNearPlayer;   // 추적 코루틴 변수
     private Coroutine myUpdate;         // Update 코루틴 변수
 
     private Player[] players;           // 추적할 플레이어 리스트
     private Player target;              // 가장 가까운 플레이어
     private EnemyState enemyState;      // 적 상태
+    private Vector3 pivot;              // 피봇
 
     public GameObject attackUI;         // 공격 UI
-    public RectTransform attackGauge;   // 공격게이지 UI
-    public Transform attackPoint;       // 공격 지점
-    public Vector2 attackRange;         // 공격 범위
-
-    private float attackGaugeValue;     // 공격UI 게이지 값
-    private float maxGauge;             // 공격UI 최대 게이지 값
+    public Image attackGauge;           // 공격게이지 UI
+    public Transform detectPoint;       // 공격 감지 피봇
+    public Vector2 detectRange;         // 공격 감지 범위
+    public float[] lens = { 1.53f, 1.48f, 1.39f, 1.28f, 1.155f };   // 공격 감지 레이캐스트 마다 길이 할당 -> 기즈모로 직접 길이 구함..
+    List<Vector2> dirs = new List<Vector2>();   // 공격 감지 방향 리스트
+    
     private Material material;
     private Color materialTintColor;
 
     private Animator animator;
-    private Rigidbody2D rigidbody2D;    
+    private Rigidbody2D rigidbody2D;
+    private HealthBarFade healthBarFade;
 
     protected override void OnEnable()
     {
@@ -38,11 +41,11 @@ public class Demon_Melee : LivingObject
         startingHP = 100f;
         HP = startingHP;
         damage = 10f;
-        speed = 30f;
+        moveSpeed = 30f;
+        attackSpeed = 5f;
         dead = false;
-        attackGaugeValue = 0f;  // 현재 공격 게이지
-        maxGauge = 1f;       // 도달해야 할 공격 게이지
         enemyState = EnemyState.IDLE;   // 적 상태
+        dir = 1;                        // 오른쪽 방향 할당
     }
 
     void Awake()
@@ -52,8 +55,18 @@ public class Demon_Melee : LivingObject
         animator = GetComponent<Animator>();
         rigidbody2D = GetComponent<Rigidbody2D>();
         material = GetComponent<SpriteRenderer>().material;
+        healthBarFade = GetComponentInChildren<HealthBarFade>();
 
         materialTintColor = new Color(1f, 0f, 0f, 150f / 255f);
+
+        // 공격 감지 레이캐스트 방향 할당
+        for (int i = 0; i < 5; i++)
+        {
+            dirs.Add(new Vector2(
+                Mathf.Cos((5 + 13.75f * i) * Mathf.Deg2Rad),
+                Mathf.Sin((5 + 13.75f * i) * Mathf.Deg2Rad)
+                ));
+        }                
     }
 
     void Start()
@@ -61,7 +74,7 @@ public class Demon_Melee : LivingObject
         findNearPlayer = StartCoroutine(FindNearPlayer(10f)); // 추적 코루틴 변수에 할당, 10초 마다 실행
         myUpdate = StartCoroutine(MyUpdate());        
     }
-
+    
     IEnumerator MyUpdate()
     {
         while(!dead)
@@ -86,7 +99,6 @@ public class Demon_Melee : LivingObject
         }
     }
 
-
     void Attack()
     {
         // 공격 모션 -> 게이지 채우기 -> 다 채웠으면 공격
@@ -97,12 +109,12 @@ public class Demon_Melee : LivingObject
     }
 
 
-    // 공격 범위 기즈모
+    // 공격 감지 기즈모
     public void OnDrawGizmos()
     {
         // Draw a yellow sphere at the transform's position
         Gizmos.color = new Color(1f, 1f, 0f, 0.3f);
-        Gizmos.DrawCube(attackPoint.position, attackRange);
+        Gizmos.DrawCube(detectPoint.position, detectRange);
     }
     
     // n초 마다 가장 가까운 플레이어를 찾기
@@ -162,35 +174,37 @@ public class Demon_Melee : LivingObject
     void DetectPlayer()
     {        
         // 공격 감지 범위 구현
-        Collider2D hit = Physics2D.OverlapBox(attackPoint.position, attackRange, 0f);
+        Collider2D[] hits = Physics2D.OverlapBoxAll(detectPoint.position, detectRange, 0f);
 
-        if (hit)
+        foreach (Collider2D hit in hits)
         {
-            // 플레이어를 감지 했다면
-            if (hit.tag == "Player")
+            if (hit)
             {
-                enemyState = EnemyState.ATTACK;                
+                // 플레이어를 감지 했다면
+                if (hit.tag == "Player")
+                {
+                    enemyState = EnemyState.ATTACK;
+                    return;
+                }
             }
+            else
+            {
+                Debug.Log("플레이어 미발견");
+            }                    
         }
-        else
-        {
-            Debug.Log("플레이어 미발견");
-        }                    
     }
 
     void Gauging()
     {        
-        if(attackGaugeValue >= maxGauge)
-        {            
-            attackGauge.sizeDelta = new Vector2(0f, 1.8f);
-            attackGaugeValue = 0f;
-            animator.speed = 1f;            
+        if(attackGauge.fillAmount >= 1f)
+        {
+            attackGauge.fillAmount = 0f;
+            animator.speed = 1f;
             enemyState = EnemyState.ATTACK;
             return;
         }
 
-        attackGauge.sizeDelta = attackGauge.sizeDelta + new Vector2(0.1f, 0f);
-        attackGaugeValue += 0.1f;                                
+        attackGauge.fillAmount += attackSpeed / 100f;
     }
 
     // Attack 애니메이션 이벤트 함수 -> 공격 게이지 시작
@@ -201,26 +215,43 @@ public class Demon_Melee : LivingObject
     }
 
     // Attack 애니메이션 이벤트 함수 -> 공격 끝 -> 범위 내 플레이어에게 데미지 적용
-    public void EndAttack() 
+    public void EndAttack()
     {
-        Collider2D[] hits = Physics2D.OverlapBoxAll(attackPoint.position, attackRange, 0f);
+        // 피봇 구하기
+        pivot = transform.position + new Vector3(0f, -0.5f, 0f);
 
-        if (hits.Length > 0)
+        // 레이캐스트 기즈모 표시
+
+        for (int i = 0; i < 5; i++)
         {
-            foreach (Collider2D hit in hits)
+            Debug.DrawRay(pivot, new Vector3(dir, 1f, 0) * dirs[i] * lens[i], Color.yellow);
+        }
+
+        // 플레이어에게 데미지를 주었는지 판단
+        bool isDamaed = false;
+        // 레이캐스트 
+        for (int i = 0; i < 5; i++)
+        {
+            // 데미지를 주었다면 break
+            if (isDamaed)
             {
-                // 플레이어를 감지 했다면
-                if (hit.tag == "Player")
+                break;
+            }
+            RaycastHit2D[] hits = Physics2D.RaycastAll(pivot, new Vector3(dir, 1f, 0) * dirs[i], lens[i]);
+            foreach (RaycastHit2D hit in hits)
+            {
+                if(hit.collider.tag == "Player")
                 {
-                    // 플레이어 공격
-                    Player player = hit.GetComponent<Player>();
-                    player.OnDamage(damage);
+                    // 플레이어 데미지 주기
+
+                    // 데미지는 한번만 주기 때문에 true
+                    isDamaed = true;
+                    Debug.Log(hit.collider.tag);
+                    // foreach문 빠져나가기
+                    break;
+                    
                 }
             }
-        }
-        else
-        {
-            Debug.Log("플레이어 미발견");
         }
 
         enemyState = EnemyState.IDLE;
@@ -249,14 +280,16 @@ public class Demon_Melee : LivingObject
             if(moveDir.x > 0f)
             {
                 transform.rotation = new Quaternion(0f, 0f, 0f, 0f);
+                dir = 1;
             }
             else
             {
                 transform.rotation = new Quaternion(0f, 180f, 0f, 0f);
+                dir = -1;
             }
 
             // 이동            
-            rigidbody2D.velocity = moveDir * speed * Time.deltaTime;
+            rigidbody2D.velocity = moveDir * moveSpeed * Time.deltaTime;
         }
     }
 
@@ -266,8 +299,14 @@ public class Demon_Melee : LivingObject
         // 체력 감소
         base.OnDamage(damage);
 
-        // 피격 효과
+        // 틴트 효과
         StartCoroutine(SetTintColor());
+
+        // HIT 효과
+        DamagePopup.Create(transform.position, false);
+
+        // HP 감소 효과
+        healthBarFade.healthSystem.Damage((int)damage);
     }
     
     // 틴트 효과
@@ -291,7 +330,6 @@ public class Demon_Melee : LivingObject
             yield return new WaitForSeconds(0.1f);
         }
     }
-
 
     public void OnAttackUI()
     {

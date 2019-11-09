@@ -12370,7 +12370,7 @@ SortingGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 819425301455656457}
   m_Enabled: 1
-  m_SortingLayerID: 0
+  m_SortingLayerID: 1164205051
   m_SortingLayer: 0
   m_SortingOrder: 200
 --- !u!114 &777710342221079757
@@ -12474,7 +12474,7 @@ CapsuleCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: -0.08407092, y: 0.9959564}
@@ -12495,11 +12495,11 @@ MonoBehaviour:
   startingHP: 100
   HP: 0
   damage: 0
-  speed: 0
-  dead: 0
-  joystick: {fileID: 0}
   moveSpeed: 3
   attackSpeed: 1
+  dir: 0
+  dead: 0
+  joystick: {fileID: 0}
   attackPoint: {fileID: 818786369325970815}
   attackRange: {x: 1, y: 1}
 --- !u!114 &1752485457
@@ -12517,7 +12517,9 @@ MonoBehaviour:
   startingHP: 100
   HP: 0
   damage: 0
-  speed: 0
+  moveSpeed: 0
+  attackSpeed: 0
+  dir: 0
   dead: 0
 --- !u!1 &819428389949400757
 GameObject:
