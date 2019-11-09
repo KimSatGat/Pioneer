@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : LivingObject
 {
-    enum PlayerState { IDLE, RUN, ATTACK};    
+    enum PlayerState { IDLE, RUN, ATTACK, DIE};
 
     public Joystick joystick;       // 조이스틱
     public float moveSpeed;         // 플레이어 이동속도
@@ -137,6 +137,8 @@ public class PlayerController : MonoBehaviour
             {
                 if(collider.tag == "Enemy")
                 {
+                    LivingObject livingObject = collider.GetComponent<LivingObject>();
+                    livingObject.OnDamage(damage);
                     Debug.Log("적 공격!");
                 }
             }

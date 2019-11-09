@@ -11742,7 +11742,7 @@ GameObject:
   m_Component:
   - component: {fileID: 818786369325970815}
   m_Layer: 0
-  m_Name: AttackRange
+  m_Name: AttackPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -12176,7 +12176,7 @@ Transform:
   m_GameObject: {fileID: 819425301455656457}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -6.66, y: 1.2, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
+  m_LocalScale: {x: 0.6, y: 0.6, z: 0.6}
   m_Children:
   - {fileID: 814057271766235765}
   - {fileID: 814194795661169401}
@@ -12492,11 +12492,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de8bf317734d3fc41a64ed586b0422d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  startingHP: 100
+  HP: 0
+  damage: 0
+  speed: 0
+  dead: 0
   joystick: {fileID: 0}
   moveSpeed: 3
-  attackSpeed: 0
-  attackPoint: {fileID: 0}
-  attackRange: {x: 0, y: 0}
+  attackSpeed: 1
+  attackPoint: {fileID: 818786369325970815}
+  attackRange: {x: 1, y: 1}
 --- !u!114 &1752485457
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12510,6 +12515,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   startingHP: 100
+  HP: 0
+  damage: 0
+  speed: 0
+  dead: 0
 --- !u!1 &819428389949400757
 GameObject:
   m_ObjectHideFlags: 0

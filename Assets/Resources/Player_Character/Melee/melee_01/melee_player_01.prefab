@@ -1048,7 +1048,8 @@ MonoBehaviour:
   joystick: {fileID: 0}
   moveSpeed: 3
   attackSpeed: 0
-  attackRange: {fileID: 1993371107}
+  attackPoint: {fileID: 0}
+  attackRange: {x: 0, y: 0}
 --- !u!1 &1074274214347097
 GameObject:
   m_ObjectHideFlags: 0
