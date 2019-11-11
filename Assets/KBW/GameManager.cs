@@ -18,7 +18,7 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-        
+     
     }
 
     // 해상도, 가로 모드 설정

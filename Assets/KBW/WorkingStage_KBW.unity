@@ -299,6 +299,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 300091122886022829, guid: a0fee25dbc744814d889ac96a39b72fe,
+        type: 3}
+      propertyPath: m_SortingLayerID
+      value: 639670713
+      objectReference: {fileID: 0}
+    - target: {fileID: 300091122886022829, guid: a0fee25dbc744814d889ac96a39b72fe,
+        type: 3}
+      propertyPath: m_SortingLayer
+      value: 3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a0fee25dbc744814d889ac96a39b72fe, type: 3}
 --- !u!1 &519420028
@@ -312,6 +322,7 @@ GameObject:
   - component: {fileID: 519420032}
   - component: {fileID: 519420031}
   - component: {fileID: 519420029}
+  - component: {fileID: 519420030}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -327,6 +338,18 @@ AudioListener:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 519420028}
   m_Enabled: 1
+--- !u!114 &519420030
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 519420028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 885b51f49c3ea4f4780cff8444ae872c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!20 &519420031
 Camera:
   m_ObjectHideFlags: 0
@@ -772,5 +795,15 @@ PrefabInstance:
       propertyPath: joystick
       value: 
       objectReference: {fileID: 27780965}
+    - target: {fileID: 698285975292561443, guid: ca569c9c590952d40b98985d0486ca77,
+        type: 3}
+      propertyPath: m_SortingLayerID
+      value: 639670713
+      objectReference: {fileID: 0}
+    - target: {fileID: 698285975292561443, guid: ca569c9c590952d40b98985d0486ca77,
+        type: 3}
+      propertyPath: m_SortingLayer
+      value: 3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ca569c9c590952d40b98985d0486ca77, type: 3}

@@ -14,6 +14,7 @@ public class Demon_Melee : LivingObject
     private Player target;              // 가장 가까운 플레이어
     private EnemyState enemyState;      // 적 상태
     private Vector3 pivot;              // 피봇
+    private CameraShake cameraShake;
 
     public GameObject attackUI;         // 공격 UI
     public Image attackGauge;           // 공격게이지 UI
@@ -51,6 +52,7 @@ public class Demon_Melee : LivingObject
     void Awake()
     {
         players = GameObject.FindObjectsOfType<Player>();  // 플레이어 리스트 담기
+        cameraShake = GameObject.FindObjectOfType<CameraShake>();   // 메인카메라의 CameraShake 컴포넌트 할당
 
         animator = GetComponent<Animator>();
         rigidbody2D = GetComponent<Rigidbody2D>();
@@ -307,6 +309,9 @@ public class Demon_Melee : LivingObject
 
         // HP 감소 효과
         healthBarFade.healthSystem.Damage((int)damage);
+
+        // 카메라 흔들림
+        StartCoroutine(cameraShake.ShakeCamera(0.01f, 0.05f));
     }
     
     // 틴트 효과
