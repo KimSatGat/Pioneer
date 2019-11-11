@@ -24,7 +24,10 @@ public class Demon_Melee : LivingObject
     List<Vector2> dirs = new List<Vector2>();   // 공격 감지 방향 리스트
     
     private Material material;
-    private Color materialTintColor;
+    private Color materialTintColor;    // 틴트 효과를 위한 색상값
+    private string dissolveShader = "Shader Graphs/Dissolve";
+    private float dissolveAmout = 0f;   // Dissolve 효과 값 
+
 
     private Animator animator;
     private Rigidbody2D rigidbody2D;
@@ -73,9 +76,12 @@ public class Demon_Melee : LivingObject
     void Start()
     {
         findNearPlayer = StartCoroutine(FindNearPlayer(10f)); // 추적 코루틴 변수에 할당, 10초 마다 실행
-        myUpdate = StartCoroutine(MyUpdate());        
+        myUpdate = StartCoroutine(MyUpdate());
+
+        onDeath += SetOnDeath;        // 죽었을 때 이벤트 추가
     }
-    
+
+
     IEnumerator MyUpdate()
     {
         while(!dead)
@@ -249,8 +255,7 @@ public class Demon_Melee : LivingObject
                     isDamaed = true;
 
                     LivingObject livingObject = hit.collider.gameObject.GetComponent<LivingObject>();
-                    livingObject.OnDamage(damage);
-                    
+                    livingObject.OnDamage(damage);                                        
                     // foreach문 빠져나가기
                     break;                    
                 }
@@ -303,7 +308,7 @@ public class Demon_Melee : LivingObject
         base.OnDamage(damage);
 
         // 틴트 효과
-        StartCoroutine(SetTintColor());
+        StartCoroutine(SetTint());        
 
         // HIT 효과
         DamagePopup.Create(transform.position, false);
@@ -316,7 +321,7 @@ public class Demon_Melee : LivingObject
     }
     
     // 틴트 효과
-    IEnumerator SetTintColor()
+    IEnumerator SetTint()
     {        
         while(true)
         {            
@@ -329,12 +334,42 @@ public class Demon_Melee : LivingObject
             else
             {
                 materialTintColor = new Color(1f, 0f, 0f, 150f / 255f);                
-                StopCoroutine(SetTintColor());                
+                StopCoroutine(SetTint());                
                 break;
             }          
 
             yield return new WaitForSeconds(0.1f);
         }
+    }
+    
+    // Dissolve 효과
+    IEnumerator SetDissolve()
+    {
+        // 셰이더 변경
+        material.shader = Shader.Find(dissolveShader);
+        float dissolveSpeed = 5f;
+        while (true)
+        {            
+            if(dissolveAmout < 1f)
+            {
+                dissolveAmout = Mathf.Clamp01(dissolveAmout + dissolveSpeed * Time.deltaTime);
+                material.SetFloat("_DissolveAmount", dissolveAmout);
+            }
+
+            else
+            {
+                break;
+            }
+
+            yield return new WaitForSeconds(0.1f);
+        }
+    }
+
+    void SetOnDeath()
+    {
+        animator.speed = 0f;
+        StartCoroutine(SetDissolve());
+        Destroy(gameObject, 1f);
     }
 
     public void OnAttackUI()

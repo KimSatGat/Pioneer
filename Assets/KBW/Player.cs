@@ -151,7 +151,7 @@ public class Player : LivingObject
                 if(collider.tag == "Enemy")
                 {
                     LivingObject livingObject = collider.GetComponent<LivingObject>();
-                    livingObject.OnDamage(0f);
+                    livingObject.OnDamage(damage);
                     Debug.Log("적 공격!");
                 }
             }
