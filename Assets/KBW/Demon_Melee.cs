@@ -28,12 +28,11 @@ public class Demon_Melee : LivingObject
 
     private Animator animator;
     private Rigidbody2D rigidbody2D;
-    private HealthBarFade healthBarFade;
+    private HealthBarFade healthBarFade;    // 체력바
 
     protected override void OnEnable()
-    {
-        // InitObject()
-        base.OnEnable();
+    {        
+        base.OnEnable(); // InitObject()
     }
 
     // 능력치, 상태 값 설정
@@ -248,10 +247,12 @@ public class Demon_Melee : LivingObject
 
                     // 데미지는 한번만 주기 때문에 true
                     isDamaed = true;
-                    Debug.Log(hit.collider.tag);
-                    // foreach문 빠져나가기
-                    break;
+
+                    LivingObject livingObject = hit.collider.gameObject.GetComponent<LivingObject>();
+                    livingObject.OnDamage(damage);
                     
+                    // foreach문 빠져나가기
+                    break;                    
                 }
             }
         }
@@ -307,7 +308,7 @@ public class Demon_Melee : LivingObject
         // HIT 효과
         DamagePopup.Create(transform.position, false);
 
-        // HP 감소 효과
+        // HP UI 감소 효과
         healthBarFade.healthSystem.Damage((int)damage);
 
         // 카메라 흔들림

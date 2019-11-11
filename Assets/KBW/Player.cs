@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerController : LivingObject
+public class Player : LivingObject
 {
     enum PlayerState { IDLE, RUN, ATTACK, DIE};
 
@@ -10,23 +10,38 @@ public class PlayerController : LivingObject
     public Transform attackPoint;   // 공격 지점
     public Vector2 attackRange;     // 공격 범위
 
-    private PlayerState playerState;    // 플레이어 상태
-    private Vector2 playerDir;  // 플레이어 방향
+    private PlayerState playerState;    // 플레이어 상태    
     
     private Vector3 moveVector; // 플레이어 이동벡터
     private Animator animator;  // 플레이어 애니메이터    
     private Rigidbody2D rigidbody2D;
 
+    private HealthBarFade healthBarFade; // 체력바
+
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+    }
+
+    public override void InitObject()
+    {
+        startingHP = 100f;
+        HP = startingHP;
+        damage = 30f;
+        moveSpeed = 30f;
+        attackSpeed = 1f;
+        dead = false;
+        playerState = PlayerState.IDLE;     // 플레이어 상태 초기화
+        dir = 1;                            // 오른쪽 방향 할당
+        moveVector = Vector3.zero;          // 플레이어 이동벡터 초기화
+    }
 
     private void Awake()
-    {
-        playerState = PlayerState.IDLE;     // 플레이어 상태 초기화
-        playerDir = Vector2.right;
-        moveVector = Vector3.zero;          // 플레이어 이동벡터 초기화
-        attackSpeed = 1f;
-        
+    {                        
         animator = GetComponent<Animator>();
         rigidbody2D = GetComponent<Rigidbody2D>();
+
+        healthBarFade = GetComponentInChildren<HealthBarFade>();
     }
 
     void Start()
@@ -46,7 +61,7 @@ public class PlayerController : LivingObject
     }
     
     // 조이스틱 입력값 받아오기
-    public void HandleInput()
+    public void HandleInput()   
     {
         Vector2 moveDir = joystick.GetPlayerDir();
 
@@ -67,7 +82,7 @@ public class PlayerController : LivingObject
         if(moveVector.x > 0)
         {
             playerState = PlayerState.RUN;
-            playerDir = Vector2.right;
+            dir = 1;
             transform.rotation = new Quaternion(0f, 0f, 0f, 0f);
 
         }
@@ -75,7 +90,7 @@ public class PlayerController : LivingObject
         else if(moveVector.x < 0)
         {
             playerState = PlayerState.RUN;
-            playerDir = Vector2.left;
+            dir = -1;
             transform.rotation = new Quaternion(0f, 180f, 0f, 0f);
         }
         else if(playerState == PlayerState.ATTACK)
@@ -136,7 +151,7 @@ public class PlayerController : LivingObject
                 if(collider.tag == "Enemy")
                 {
                     LivingObject livingObject = collider.GetComponent<LivingObject>();
-                    livingObject.OnDamage(10);      // 10 값은 테스트용 -> 바꿔야함
+                    livingObject.OnDamage(0f);
                     Debug.Log("적 공격!");
                 }
             }
@@ -145,5 +160,14 @@ public class PlayerController : LivingObject
         // 원래 상태로 복귀
         playerState = PlayerState.IDLE;
         animator.SetInteger("State", (int)playerState);
+    }
+
+    public override void OnDamage(float damage)
+    {
+        // 체력 감소
+        base.OnDamage(damage);
+
+        // HP UI 감소 효과
+        healthBarFade.healthSystem.Damage((int)damage);
     }
 }
