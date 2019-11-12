@@ -15,14 +15,15 @@ public class LivingObject : MonoBehaviour, IDamageable
     public bool dead;               // 사망 상태
     public event Action onDeath;    // 사망시 발동할 이벤트
     SpriteRenderer spriteRenderer;
+
     // 생명체가 활성화될때 상태를 리셋
     protected virtual void OnEnable()
     {        
         InitObject();
     }
-    
+
     // 생명체 초기화 기능
-    public virtual void InitObject(){}    
+    public virtual void InitObject() { }
 
     // 데미지를 입는 기능
     public virtual void OnDamage(float damage)

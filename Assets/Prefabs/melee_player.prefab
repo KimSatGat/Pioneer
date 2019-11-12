@@ -7187,7 +7187,7 @@ GameObject:
   - component: {fileID: 3714194666044688576}
   - component: {fileID: 3714194666044688579}
   m_Layer: 0
-  m_Name: melee_player_01
+  m_Name: melee_player
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

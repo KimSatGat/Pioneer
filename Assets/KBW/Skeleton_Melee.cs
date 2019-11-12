@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Demon_Melee : LivingObject
+public class Skeleton_Melee : LivingObject
 {
-    enum EnemyState { IDLE, TRACE, ATTACK, DIE, GAUGING};
+    enum EnemyState { IDLE, TRACE, ATTACK, DIE, GAUGING };
 
     private Coroutine findNearPlayer;   // 추적 코루틴 변수
     private Coroutine myUpdate;         // Update 코루틴 변수
@@ -22,7 +22,7 @@ public class Demon_Melee : LivingObject
     public Vector2 detectRange;         // 공격 감지 범위
     public float[] lens = { 1.53f, 1.48f, 1.39f, 1.28f, 1.155f };   // 공격 감지 레이캐스트 마다 길이 할당 -> 기즈모로 직접 길이 구함..
     List<Vector2> dirs = new List<Vector2>();   // 공격 감지 방향 리스트
-    
+
     private Material material;
     private Color materialTintColor;    // 틴트 효과를 위한 색상값
     private string dissolveShader = "Shader Graphs/Dissolve";
@@ -34,7 +34,7 @@ public class Demon_Melee : LivingObject
     private HealthBarFade healthBarFade;    // 체력바
 
     protected override void OnEnable()
-    {        
+    {
         base.OnEnable(); // InitObject()
     }
 
@@ -70,7 +70,7 @@ public class Demon_Melee : LivingObject
                 Mathf.Cos((5 + 13.75f * i) * Mathf.Deg2Rad),
                 Mathf.Sin((5 + 13.75f * i) * Mathf.Deg2Rad)
                 ));
-        }                
+        }
     }
 
     void Start()
@@ -79,17 +79,17 @@ public class Demon_Melee : LivingObject
         myUpdate = StartCoroutine(MyUpdate());
 
         onDeath += OffAttackUI;     // 죽었을 때 이벤트 추가
-        onDeath += SetOnDeath;        
+        onDeath += SetOnDeath;      
     }
 
 
     IEnumerator MyUpdate()
     {
-        while(!dead)
+        while (!dead)
         {
-            switch(enemyState)
+            switch (enemyState)
             {
-                case EnemyState.IDLE:                
+                case EnemyState.IDLE:
                 case EnemyState.TRACE:
                     DetectPlayer();  // 감지
                     TracePlayer();   // 감지한 플레이어한테 이동
@@ -113,7 +113,7 @@ public class Demon_Melee : LivingObject
 
         // 공격 모션               
         animator.SetInteger("State", (int)enemyState);
-        rigidbody2D.velocity = new Vector2(0f, 0f);        
+        rigidbody2D.velocity = new Vector2(0f, 0f);
     }
 
 
@@ -124,7 +124,7 @@ public class Demon_Melee : LivingObject
         Gizmos.color = new Color(1f, 1f, 0f, 0.3f);
         Gizmos.DrawCube(detectPoint.position, detectRange);
     }
-    
+
     // n초 마다 가장 가까운 플레이어를 찾기
     IEnumerator FindNearPlayer(float n)
     {
@@ -180,7 +180,7 @@ public class Demon_Melee : LivingObject
     }
 
     void DetectPlayer()
-    {        
+    {
         // 공격 감지 범위 구현
         Collider2D[] hits = Physics2D.OverlapBoxAll(detectPoint.position, detectRange, 0f);
 
@@ -198,13 +198,13 @@ public class Demon_Melee : LivingObject
             else
             {
                 Debug.Log("플레이어 미발견");
-            }                    
+            }
         }
     }
 
     void Gauging()
-    {        
-        if(attackGauge.fillAmount >= 1f)
+    {
+        if (attackGauge.fillAmount >= 1f)
         {
             attackGauge.fillAmount = 0f;
             animator.speed = 1f;
@@ -248,7 +248,7 @@ public class Demon_Melee : LivingObject
             RaycastHit2D[] hits = Physics2D.RaycastAll(pivot, new Vector3(dir, 1f, 0) * dirs[i], lens[i]);
             foreach (RaycastHit2D hit in hits)
             {
-                if(hit.collider.tag == "Player")
+                if (hit.collider.tag == "Player")
                 {
                     // 플레이어 데미지 주기
 
@@ -256,9 +256,9 @@ public class Demon_Melee : LivingObject
                     isDamaed = true;
 
                     LivingObject livingObject = hit.collider.gameObject.GetComponent<LivingObject>();
-                    livingObject.OnDamage(damage);                                        
+                    livingObject.OnDamage(damage);
                     // foreach문 빠져나가기
-                    break;                    
+                    break;
                 }
             }
         }
@@ -286,7 +286,7 @@ public class Demon_Melee : LivingObject
             Vector2 moveDir = (target.transform.position - transform.position).normalized;
 
             // 바라보는 방향 설정
-            if(moveDir.x > 0f)
+            if (moveDir.x > 0f)
             {
                 transform.rotation = new Quaternion(0f, 0f, 0f, 0f);
                 dir = 1;
@@ -303,13 +303,13 @@ public class Demon_Melee : LivingObject
     }
 
     public override void OnDamage(float damage)
-    {        
+    {
 
         // 체력 감소
         base.OnDamage(damage);
 
         // 틴트 효과
-        StartCoroutine(SetTint());        
+        StartCoroutine(SetTint());
 
         // HIT 효과
         DamagePopup.Create(transform.position, false);
@@ -320,29 +320,29 @@ public class Demon_Melee : LivingObject
         // 카메라 흔들림
         StartCoroutine(cameraShake.ShakeCamera(0.01f, 0.05f));
     }
-    
+
     // 틴트 효과
     IEnumerator SetTint()
-    {        
-        while(true)
-        {            
-            if(materialTintColor.a > 0)
+    {
+        while (true)
+        {
+            if (materialTintColor.a > 0)
             {
                 materialTintColor.a = Mathf.Clamp01(materialTintColor.a - 6f * Time.deltaTime);
-                
+
                 material.SetColor("_Tint", materialTintColor);
             }
             else
             {
-                materialTintColor = new Color(1f, 0f, 0f, 150f / 255f);                
-                StopCoroutine(SetTint());                
+                materialTintColor = new Color(1f, 0f, 0f, 150f / 255f);
+                StopCoroutine(SetTint());
                 break;
-            }          
+            }
 
             yield return new WaitForSeconds(0.1f);
         }
     }
-    
+
     // Dissolve 효과
     IEnumerator SetDissolve()
     {
@@ -350,8 +350,8 @@ public class Demon_Melee : LivingObject
         material.shader = Shader.Find(dissolveShader);
         float dissolveSpeed = 5f;
         while (true)
-        {            
-            if(dissolveAmout < 1f)
+        {
+            if (dissolveAmout < 1f)
             {
                 dissolveAmout = Mathf.Clamp01(dissolveAmout + dissolveSpeed * Time.deltaTime);
                 material.SetFloat("_DissolveAmount", dissolveAmout);

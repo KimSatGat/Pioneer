@@ -244,6 +244,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Demon_Melee
       objectReference: {fileID: 0}
+    - target: {fileID: 300091122886022737, guid: a0fee25dbc744814d889ac96a39b72fe,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 300091122886022828, guid: a0fee25dbc744814d889ac96a39b72fe,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -298,15 +303,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1109483461, guid: a0fee25dbc744814d889ac96a39b72fe, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 300091123498106150, guid: a0fee25dbc744814d889ac96a39b72fe,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a0fee25dbc744814d889ac96a39b72fe, type: 3}
@@ -620,12 +616,17 @@ PrefabInstance:
     - target: {fileID: 3714194666044688581, guid: ca569c9c590952d40b98985d0486ca77,
         type: 3}
       propertyPath: m_Name
-      value: melee_player_01 (1)
+      value: melee_player (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3714194666044688581, guid: ca569c9c590952d40b98985d0486ca77,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3714194666044688598, guid: ca569c9c590952d40b98985d0486ca77,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 2.22
+      value: -8.37
       objectReference: {fileID: 0}
     - target: {fileID: 3714194666044688598, guid: ca569c9c590952d40b98985d0486ca77,
         type: 3}
@@ -694,12 +695,12 @@ PrefabInstance:
     - target: {fileID: 3714194666044688581, guid: ca569c9c590952d40b98985d0486ca77,
         type: 3}
       propertyPath: m_Name
-      value: melee_player_01
+      value: melee_player
       objectReference: {fileID: 0}
     - target: {fileID: 3714194666044688598, guid: ca569c9c590952d40b98985d0486ca77,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 2.22
+      value: -5.62
       objectReference: {fileID: 0}
     - target: {fileID: 3714194666044688598, guid: ca569c9c590952d40b98985d0486ca77,
         type: 3}
