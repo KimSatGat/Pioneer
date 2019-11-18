@@ -10,17 +10,7 @@ public class GameManager : MonoBehaviour
     {
         SettingResolution();
     }
-    
-    void Start()
-    {
-        
-    }
-
-    void Update()
-    {
-     
-    }
-
+  
     // 해상도, 가로 모드 설정
     void SettingResolution()
     {

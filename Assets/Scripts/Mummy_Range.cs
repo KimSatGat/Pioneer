@@ -1,9 +1,9 @@
-﻿using System.Collections;
+﻿﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Zombie_Range : LivingObject
+public class Mummy_Range : LivingObject
 {
     enum EnemyState { IDLE, TRACE, ATTACK, DIE, GAUGING };
 
@@ -16,16 +16,15 @@ public class Zombie_Range : LivingObject
     private CameraShake cameraShake;
 
     public Transform pivot;             // 피봇
-    public GameObject attackUI;         // 공격 UI
-    public RectTransform attackGauge;      // 공격게이지 UI
     public Transform detectPoint;       // 공격 감지 피봇
-    public Vector2 detectRange;         // 공격 감지 범위    
-
+    public Transform missilePoint;      // 미사일 생성 위치
+    public Vector2 detectRange;         // 공격 감지 범위
+    
     private Material material;
     private Color materialTintColor;    // 틴트 효과를 위한 색상값
     private string dissolveShader = "Shader Graphs/Dissolve";
     private float dissolveAmout = 0f;   // Dissolve 효과 값
-
+    private Missile missile;
 
     private Animator animator;
     private Rigidbody2D rigidbody2D;
@@ -66,9 +65,8 @@ public class Zombie_Range : LivingObject
     {
         findNearPlayer = StartCoroutine(FindNearPlayer(10f)); // 추적 코루틴 변수에 할당, 10초 마다 실행
         myUpdate = StartCoroutine(MyUpdate());
-
-        onDeath += OffAttackUI;     // 죽었을 때 이벤트 추가
-        onDeath += SetOnDeath;
+        
+        onDeath += SetOnDeath;  // 죽었을 때 이벤트 추가
     }
 
     IEnumerator MyUpdate()
@@ -179,14 +177,8 @@ public class Zombie_Range : LivingObject
                 // 플레이어를 감지 했다면
                 if (hit.tag == "Player")
                 {
-                    // y값 계산
-                    float offsetPosY = Mathf.Abs(hit.transform.position.y - pivot.position.y);
-
-                    if (offsetPosY <= 0.5f)
-                    {
-                        enemyState = EnemyState.ATTACK;
-                        return;
-                    }
+                    enemyState = EnemyState.ATTACK;
+                    return;                    
                 }
             }
             else
@@ -198,40 +190,30 @@ public class Zombie_Range : LivingObject
 
     void Gauging()
     {
-        if (attackGauge.sizeDelta.x >= 1f)
+        if (missile.GetColorAlpha() >= 1f)
         {
-            attackGauge.sizeDelta = new Vector2(0f, 1f);
+            Vector2 missileDir = (target.transform.position + new Vector3(0f, 0.5f, 0f) - missilePoint.position).normalized;
+            float missileSpeed = 100f;
+            missile.Fire(missileSpeed, missileDir);
+
             animator.speed = 1f;
             enemyState = EnemyState.ATTACK;
             return;
         }
-        attackGauge.sizeDelta += new Vector2(attackSpeed / 100f, 0f);
+        missile.SetColor(new Color(0f, 0f, 0f, 30f / 255f));        
     }
 
     // Attack 애니메이션 이벤트 함수 -> 공격 게이지 시작
     public void StartAttackGauge()
     {
         animator.speed = 0f;
+        missile = Missile.Create(missilePoint.position, damage);
         enemyState = EnemyState.GAUGING;
     }
 
     // Attack 애니메이션 이벤트 함수 -> 공격 끝 -> 범위 내 플레이어에게 데미지 적용
     public void EndAttack()
     {
-        Collider2D[] hits = Physics2D.OverlapCapsuleAll(attackUI.transform.position,
-            new Vector2(0.97f, 0.76f),
-            CapsuleDirection2D.Horizontal,
-            0f);
-
-        foreach (Collider2D hit in hits)
-        {
-            if (hit.tag == "Player")
-            {
-                LivingObject livingObject = hit.gameObject.GetComponent<LivingObject>();
-                livingObject.OnDamage(damage);
-            }
-        }
-
         enemyState = EnemyState.IDLE;
         animator.SetInteger("State", (int)enemyState);
     }
@@ -340,15 +322,5 @@ public class Zombie_Range : LivingObject
         animator.speed = 0f;
         StartCoroutine(SetDissolve());
         Destroy(gameObject, 1f);
-    }
-
-    public void OnAttackUI()
-    {
-        attackUI.transform.position = target.transform.position;
-        attackUI.SetActive(true);
-    }
-    public void OffAttackUI()
-    {
-        attackUI.SetActive(false);
-    }
+    }   
 }
