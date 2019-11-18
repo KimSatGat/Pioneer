@@ -13,9 +13,9 @@ public class Demon_Melee : LivingObject
     private Player[] players;           // 추적할 플레이어 리스트
     private Player target;              // 가장 가까운 플레이어
     private EnemyState enemyState;      // 적 상태
-    private Vector3 pivot;              // 피봇
     private CameraShake cameraShake;
 
+    public Transform pivot;             // 피봇
     public GameObject attackUI;         // 공격 UI
     public Image attackGauge;           // 공격게이지 UI
     public Transform detectPoint;       // 공격 감지 피봇
@@ -191,8 +191,15 @@ public class Demon_Melee : LivingObject
                 // 플레이어를 감지 했다면
                 if (hit.tag == "Player")
                 {
-                    enemyState = EnemyState.ATTACK;
-                    return;
+                    // y값 계산
+                    float offsetPosY = Mathf.Abs(hit.transform.position.y - pivot.position.y);
+
+                    // 0.5f 차이라면 공격 상태!
+                    if(offsetPosY <= 0.5f)
+                    {
+                        enemyState = EnemyState.ATTACK;
+                        return;
+                    }
                 }
             }
             else
@@ -224,15 +231,12 @@ public class Demon_Melee : LivingObject
 
     // Attack 애니메이션 이벤트 함수 -> 공격 끝 -> 범위 내 플레이어에게 데미지 적용
     public void EndAttack()
-    {
-        // 피봇 구하기
-        pivot = transform.position + new Vector3(0f, -0.5f, 0f);
-
+    {        
         // 레이캐스트 기즈모 표시
 
         for (int i = 0; i < 5; i++)
         {
-            Debug.DrawRay(pivot, new Vector3(dir, 1f, 0) * dirs[i] * lens[i], Color.yellow);
+            Debug.DrawRay(pivot.position, new Vector3(dir, 1f, 0) * dirs[i] * lens[i], Color.yellow);
         }
 
         // 플레이어에게 데미지를 주었는지 판단
@@ -245,20 +249,27 @@ public class Demon_Melee : LivingObject
             {
                 break;
             }
-            RaycastHit2D[] hits = Physics2D.RaycastAll(pivot, new Vector3(dir, 1f, 0) * dirs[i], lens[i]);
+            RaycastHit2D[] hits = Physics2D.RaycastAll(pivot.position, new Vector3(dir, 1f, 0) * dirs[i], lens[i]);
             foreach (RaycastHit2D hit in hits)
             {
                 if(hit.collider.tag == "Player")
                 {
                     // 플레이어 데미지 주기
 
-                    // 데미지는 한번만 주기 때문에 true
-                    isDamaed = true;
+                    // y값 계산
+                    float offsetPosY = Mathf.Abs(hit.transform.position.y - pivot.position.y);
 
-                    LivingObject livingObject = hit.collider.gameObject.GetComponent<LivingObject>();
-                    livingObject.OnDamage(damage);                                        
-                    // foreach문 빠져나가기
-                    break;                    
+
+                    if(offsetPosY <= 0.5f)
+                    {
+                        // 데미지는 한번만 주기 때문에 true
+                        isDamaed = true;
+
+                        LivingObject livingObject = hit.collider.gameObject.GetComponent<LivingObject>();
+                        livingObject.OnDamage(damage);                                        
+                        // foreach문 빠져나가기
+                        break;                    
+                    }
                 }
             }
         }
@@ -283,7 +294,7 @@ public class Demon_Melee : LivingObject
             animator.SetInteger("State", (int)enemyState);
 
             // 방향 구하기
-            Vector2 moveDir = (target.transform.position - transform.position).normalized;
+            Vector2 moveDir = (target.transform.position - pivot.position).normalized;
 
             // 바라보는 방향 설정
             if(moveDir.x > 0f)

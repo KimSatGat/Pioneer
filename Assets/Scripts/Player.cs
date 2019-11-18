@@ -119,23 +119,24 @@ public class Player : LivingObject
     {
         while(true)
         {
-            Collider2D hit = Physics2D.OverlapBox(attackPoint.position, attackRange, 0f);
-            
-            if(hit)
+            Collider2D[] hits = Physics2D.OverlapBoxAll(attackPoint.position, attackRange, 0f);
+            if(hits.Length > 0)
             {
-                if(hit.tag == "Enemy" && moveVector.x == 0f)
+                foreach (Collider2D hit in hits)
                 {
-                    playerState = PlayerState.ATTACK;
-                    animator.SetInteger("State", (int)playerState);
-                    Debug.Log("적 감지");
+                    if (hit.tag == "Enemy" && moveVector.x == 0f)
+                    {
+                        float offsetPosY = Mathf.Abs(hit.transform.position.y - transform.position.y);
+
+                        if(offsetPosY <= 0.5f)
+                        {
+                            playerState = PlayerState.ATTACK;
+                            animator.SetInteger("State", (int)playerState);
+                            break;
+                        }
+                    }
                 }
-
             }
-            else
-            {
-                Debug.Log("적 미발견");
-            }
-
             yield return new WaitForSeconds(attackSpeed);
         }
     }
@@ -143,16 +144,19 @@ public class Player : LivingObject
     // 공격 모션이 끝 -> 적이 있다면 데미지 적용, 원래 상태로 복귀
     public void EndAttack()
     {
-        Collider2D[] collider2Ds = Physics2D.OverlapBoxAll(attackPoint.position, attackRange, 0f);
-        if(collider2Ds.Length > 0)
+        Collider2D[] hits = Physics2D.OverlapBoxAll(attackPoint.position, attackRange, 0f);
+        if(hits.Length > 0)
         {
-            foreach (Collider2D collider in collider2Ds)
+            foreach (Collider2D hit in hits)
             {
-                if(collider.tag == "Enemy")
+                if(hit.tag == "Enemy")
                 {
-                    LivingObject livingObject = collider.GetComponent<LivingObject>();
-                    livingObject.OnDamage(damage);
-                    Debug.Log("적 공격!");
+                    float offsetPosY = Mathf.Abs(hit.transform.position.y - transform.position.y);
+                    if (offsetPosY <= 0.5f)
+                    {
+                        LivingObject livingObject = hit.GetComponent<LivingObject>();
+                        livingObject.OnDamage(damage);                    
+                    }
                 }
             }
         }

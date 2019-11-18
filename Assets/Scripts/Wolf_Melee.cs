@@ -12,10 +12,10 @@ public class Wolf_Melee : LivingObject
 
     private Player[] players;           // 추적할 플레이어 리스트
     private Player target;              // 가장 가까운 플레이어
-    private EnemyState enemyState;      // 적 상태
-    private Vector3 pivot;              // 피봇
+    private EnemyState enemyState;      // 적 상태    
     private CameraShake cameraShake;
 
+    public Transform pivot;             // 피봇
     public GameObject attackUI;         // 공격 UI
     public Image attackGauge;           // 공격게이지 UI
     public Transform detectPoint;       // 공격 감지 피봇
@@ -53,7 +53,7 @@ public class Wolf_Melee : LivingObject
 
     void Awake()
     {
-        players = GameObject.FindObjectsOfType<Player>();  // 플레이어 리스트 담기
+        players = GameObject.FindObjectsOfType<Player>();           // 플레이어 리스트 담기
         cameraShake = GameObject.FindObjectOfType<CameraShake>();   // 메인카메라의 CameraShake 컴포넌트 할당
 
         animator = GetComponent<Animator>();
@@ -62,7 +62,7 @@ public class Wolf_Melee : LivingObject
         healthBarFade = GetComponentInChildren<HealthBarFade>();
 
         materialTintColor = new Color(1f, 0f, 0f, 150f / 255f);
-
+        
         // 공격 감지 레이캐스트 방향 할당
         for (int i = 0; i < 5; i++)
         {
@@ -122,7 +122,7 @@ public class Wolf_Melee : LivingObject
     {
         // Draw a yellow sphere at the transform's position
         Gizmos.color = new Color(1f, 1f, 0f, 0.3f);
-        Gizmos.DrawCube(detectPoint.position, detectRange);
+        Gizmos.DrawCube(detectPoint.position, detectRange);        
     }
 
     // n초 마다 가장 가까운 플레이어를 찾기
@@ -191,8 +191,14 @@ public class Wolf_Melee : LivingObject
                 // 플레이어를 감지 했다면
                 if (hit.tag == "Player")
                 {
-                    enemyState = EnemyState.ATTACK;
-                    return;
+                    // y값 계산
+                    float offsetPosY = Mathf.Abs(hit.transform.position.y - pivot.position.y);
+
+                    if(offsetPosY < 0.5f)
+                    {
+                        enemyState = EnemyState.ATTACK;
+                        return;
+                    }
                 }
             }
             else
@@ -225,14 +231,11 @@ public class Wolf_Melee : LivingObject
     // Attack 애니메이션 이벤트 함수 -> 공격 끝 -> 범위 내 플레이어에게 데미지 적용
     public void EndAttack()
     {
-        // 피봇 구하기
-        pivot = transform.position + new Vector3(0f, -0.5f, 0f);
-
         // 레이캐스트 기즈모 표시
 
         for (int i = 0; i < 5; i++)
         {
-            Debug.DrawRay(pivot, new Vector3(dir, 1f, 0) * dirs[i] * lens[i], Color.yellow);
+            Debug.DrawRay(pivot.position, new Vector3(dir, 1f, 0) * dirs[i] * lens[i], Color.yellow);
         }
 
         // 플레이어에게 데미지를 주었는지 판단
@@ -245,20 +248,26 @@ public class Wolf_Melee : LivingObject
             {
                 break;
             }
-            RaycastHit2D[] hits = Physics2D.RaycastAll(pivot, new Vector3(dir, 1f, 0) * dirs[i], lens[i]);
+            RaycastHit2D[] hits = Physics2D.RaycastAll(pivot.position, new Vector3(dir, 1f, 0) * dirs[i], lens[i]);
             foreach (RaycastHit2D hit in hits)
             {
                 if (hit.collider.tag == "Player")
                 {
                     // 플레이어 데미지 주기
 
-                    // 데미지는 한번만 주기 때문에 true
-                    isDamaed = true;
+                    // y값 계산
+                    float offsetPosY = Mathf.Abs(hit.transform.position.y - pivot.position.y);
 
-                    LivingObject livingObject = hit.collider.gameObject.GetComponent<LivingObject>();
-                    livingObject.OnDamage(damage);
-                    // foreach문 빠져나가기
-                    break;
+                    if(offsetPosY <= 0.5f)
+                    {
+                        // 데미지는 한번만 주기 때문에 true
+                        isDamaed = true;
+
+                        LivingObject livingObject = hit.collider.gameObject.GetComponent<LivingObject>();
+                        livingObject.OnDamage(damage);
+                        // foreach문 빠져나가기
+                        break;
+                    }
                 }
             }
         }

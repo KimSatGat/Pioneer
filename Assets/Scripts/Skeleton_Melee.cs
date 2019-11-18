@@ -13,14 +13,15 @@ public class Skeleton_Melee : LivingObject
     private Player[] players;           // 추적할 플레이어 리스트
     private Player target;              // 가장 가까운 플레이어
     private EnemyState enemyState;      // 적 상태
-    private Vector3 pivot;              // 피봇
     private CameraShake cameraShake;
 
+    public Transform pivot;               // 피봇
+    public Transform attackPivot;      // 공격 레이가 나가는 피봇
     public GameObject attackUI;         // 공격 UI
     public Image attackGauge;           // 공격게이지 UI
     public Transform detectPoint;       // 공격 감지 피봇
     public Vector2 detectRange;         // 공격 감지 범위
-    public float[] lens = { 1.53f, 1.48f, 1.39f, 1.28f, 1.155f };   // 공격 감지 레이캐스트 마다 길이 할당 -> 기즈모로 직접 길이 구함..
+    public float[] lens = { 1.26f, 1.31f, 1.32f, 1.31f, 1.24f };   // 공격 감지 레이캐스트 마다 길이 할당 -> 기즈모로 직접 길이 구함..
     List<Vector2> dirs = new List<Vector2>();   // 공격 감지 방향 리스트
 
     private Material material;
@@ -64,11 +65,11 @@ public class Skeleton_Melee : LivingObject
         materialTintColor = new Color(1f, 0f, 0f, 150f / 255f);
 
         // 공격 감지 레이캐스트 방향 할당
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < lens.Length; i++)
         {
             dirs.Add(new Vector2(
-                Mathf.Cos((5 + 13.75f * i) * Mathf.Deg2Rad),
-                Mathf.Sin((5 + 13.75f * i) * Mathf.Deg2Rad)
+                Mathf.Cos((-20 + 10f * i) * Mathf.Deg2Rad),
+                Mathf.Sin((-20 + 10f * i) * Mathf.Deg2Rad)
                 ));
         }
     }
@@ -81,7 +82,6 @@ public class Skeleton_Melee : LivingObject
         onDeath += OffAttackUI;     // 죽었을 때 이벤트 추가
         onDeath += SetOnDeath;      
     }
-
 
     IEnumerator MyUpdate()
     {
@@ -122,7 +122,7 @@ public class Skeleton_Melee : LivingObject
     {
         // Draw a yellow sphere at the transform's position
         Gizmos.color = new Color(1f, 1f, 0f, 0.3f);
-        Gizmos.DrawCube(detectPoint.position, detectRange);
+        Gizmos.DrawCube(detectPoint.position, detectRange);        
     }
 
     // n초 마다 가장 가까운 플레이어를 찾기
@@ -191,8 +191,14 @@ public class Skeleton_Melee : LivingObject
                 // 플레이어를 감지 했다면
                 if (hit.tag == "Player")
                 {
-                    enemyState = EnemyState.ATTACK;
-                    return;
+                    // y값 계산
+                    float offsetPosY = Mathf.Abs(hit.transform.position.y - pivot.position.y);
+
+                    if(offsetPosY <= 0.5f)
+                    {
+                        enemyState = EnemyState.ATTACK;
+                        return;
+                    }
                 }
             }
             else
@@ -225,14 +231,11 @@ public class Skeleton_Melee : LivingObject
     // Attack 애니메이션 이벤트 함수 -> 공격 끝 -> 범위 내 플레이어에게 데미지 적용
     public void EndAttack()
     {
-        // 피봇 구하기
-        pivot = transform.position + new Vector3(0f, -0.5f, 0f);
-
         // 레이캐스트 기즈모 표시
 
         for (int i = 0; i < 5; i++)
         {
-            Debug.DrawRay(pivot, new Vector3(dir, 1f, 0) * dirs[i] * lens[i], Color.yellow);
+            Debug.DrawRay(attackPivot.position, new Vector3(dir, 1f, 0) * dirs[i] * lens[i], Color.yellow);
         }
 
         // 플레이어에게 데미지를 주었는지 판단
@@ -245,20 +248,27 @@ public class Skeleton_Melee : LivingObject
             {
                 break;
             }
-            RaycastHit2D[] hits = Physics2D.RaycastAll(pivot, new Vector3(dir, 1f, 0) * dirs[i], lens[i]);
+            RaycastHit2D[] hits = Physics2D.RaycastAll(attackPivot.position, new Vector3(dir, 1f, 0) * dirs[i], lens[i]);
             foreach (RaycastHit2D hit in hits)
             {
                 if (hit.collider.tag == "Player")
                 {
                     // 플레이어 데미지 주기
 
-                    // 데미지는 한번만 주기 때문에 true
-                    isDamaed = true;
+                    // y값 계산
+                    float offsetPosY = Mathf.Abs(hit.transform.position.y - pivot.position.y);
 
-                    LivingObject livingObject = hit.collider.gameObject.GetComponent<LivingObject>();
-                    livingObject.OnDamage(damage);
-                    // foreach문 빠져나가기
-                    break;
+                    if(offsetPosY <= 0.5f)
+                    {
+                        // 데미지는 한번만 주기 때문에 true
+                        isDamaed = true;
+
+                        LivingObject livingObject = hit.collider.gameObject.GetComponent<LivingObject>();
+                        livingObject.OnDamage(damage);
+                        // foreach문 빠져나가기
+                        break;
+                    }
+
                 }
             }
         }
@@ -283,7 +293,7 @@ public class Skeleton_Melee : LivingObject
             animator.SetInteger("State", (int)enemyState);
 
             // 방향 구하기
-            Vector2 moveDir = (target.transform.position - transform.position).normalized;
+            Vector2 moveDir = (target.transform.position - pivot.position).normalized;
 
             // 바라보는 방향 설정
             if (moveDir.x > 0f)
