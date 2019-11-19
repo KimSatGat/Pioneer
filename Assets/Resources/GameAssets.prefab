@@ -45,5 +45,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pfDamagePopup: {fileID: 5441616640817915023, guid: 3c4b2f2d186ae2a42833e7cd28ef42ca,
     type: 3}
-  pfMissile: {fileID: 399973439256866025, guid: 78b11cdb9aeec7d48a68bef2c5838c5c,
+  pfPlayerMissile: {fileID: 6731368872975591064, guid: 4a94f7df9e80ef84a8f1462b590bf282,
+    type: 3}
+  pfEnemyMissile: {fileID: 399973439256866025, guid: 78b11cdb9aeec7d48a68bef2c5838c5c,
     type: 3}

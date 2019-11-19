@@ -19,5 +19,6 @@ public class GameAssets : MonoBehaviour
     }
 
     public Transform pfDamagePopup;
-    public Transform pfMissile;
+    public Transform pfPlayerMissile;
+    public Transform pfEnemyMissile;
 }

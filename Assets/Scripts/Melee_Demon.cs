@@ -1,11 +1,11 @@
-﻿﻿using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Mummy_Range : LivingObject
+public class Melee_Demon : Enemy
 {
-    enum EnemyState { IDLE, TRACE, ATTACK, DIE, GAUGING };
+    enum EnemyState { IDLE, TRACE, ATTACK, DIE, GAUGING};
 
     private Coroutine findNearPlayer;   // 추적 코루틴 변수
     private Coroutine myUpdate;         // Update 코루틴 변수
@@ -14,24 +14,26 @@ public class Mummy_Range : LivingObject
     private Player target;              // 가장 가까운 플레이어
     private EnemyState enemyState;      // 적 상태
     private CameraShake cameraShake;
-
-    public Transform pivot;             // 피봇
+    
+    public GameObject attackUI;         // 공격 UI
+    public Image attackGauge;           // 공격게이지 UI
     public Transform detectPoint;       // 공격 감지 피봇
-    public Transform missilePoint;      // 미사일 생성 위치
     public Vector2 detectRange;         // 공격 감지 범위
+    public float[] lens = { 1.53f, 1.48f, 1.39f, 1.28f, 1.155f };   // 공격 감지 레이캐스트 마다 길이 할당 -> 기즈모로 직접 길이 구함..
+    List<Vector2> dirs = new List<Vector2>();   // 공격 감지 방향 리스트
     
     private Material material;
     private Color materialTintColor;    // 틴트 효과를 위한 색상값
     private string dissolveShader = "Shader Graphs/Dissolve";
-    private float dissolveAmout = 0f;   // Dissolve 효과 값
-    private Missile missile;
+    private float dissolveAmout = 0f;   // Dissolve 효과 값 
+
 
     private Animator animator;
     private Rigidbody2D rigidbody2D;
     private HealthBarFade healthBarFade;    // 체력바
 
     protected override void OnEnable()
-    {
+    {        
         base.OnEnable(); // InitObject()
     }
 
@@ -50,7 +52,7 @@ public class Mummy_Range : LivingObject
 
     void Awake()
     {
-        players = GameObject.FindObjectsOfType<Player>();           // 플레이어 리스트 담기
+        players = GameObject.FindObjectsOfType<Player>();  // 플레이어 리스트 담기
         cameraShake = GameObject.FindObjectOfType<CameraShake>();   // 메인카메라의 CameraShake 컴포넌트 할당
 
         animator = GetComponent<Animator>();
@@ -59,23 +61,34 @@ public class Mummy_Range : LivingObject
         healthBarFade = GetComponentInChildren<HealthBarFade>();
 
         materialTintColor = new Color(1f, 0f, 0f, 150f / 255f);
+
+        // 공격 감지 레이캐스트 방향 할당
+        for (int i = 0; i < 5; i++)
+        {
+            dirs.Add(new Vector2(
+                Mathf.Cos((5 + 13.75f * i) * Mathf.Deg2Rad),
+                Mathf.Sin((5 + 13.75f * i) * Mathf.Deg2Rad)
+                ));
+        }                
     }
 
     void Start()
     {
         findNearPlayer = StartCoroutine(FindNearPlayer(10f)); // 추적 코루틴 변수에 할당, 10초 마다 실행
         myUpdate = StartCoroutine(MyUpdate());
-        
-        onDeath += SetOnDeath;  // 죽었을 때 이벤트 추가
+
+        onDeath += OffAttackUI;     // 죽었을 때 이벤트 추가
+        onDeath += SetOnDeath;        
     }
+
 
     IEnumerator MyUpdate()
     {
-        while (!dead)
+        while(!dead)
         {
-            switch (enemyState)
+            switch(enemyState)
             {
-                case EnemyState.IDLE:
+                case EnemyState.IDLE:                
                 case EnemyState.TRACE:
                     DetectPlayer();  // 감지
                     TracePlayer();   // 감지한 플레이어한테 이동
@@ -99,7 +112,7 @@ public class Mummy_Range : LivingObject
 
         // 공격 모션               
         animator.SetInteger("State", (int)enemyState);
-        rigidbody2D.velocity = new Vector2(0f, 0f);
+        rigidbody2D.velocity = new Vector2(0f, 0f);        
     }
 
 
@@ -110,7 +123,7 @@ public class Mummy_Range : LivingObject
         Gizmos.color = new Color(1f, 1f, 0f, 0.3f);
         Gizmos.DrawCube(detectPoint.position, detectRange);
     }
-
+    
     // n초 마다 가장 가까운 플레이어를 찾기
     IEnumerator FindNearPlayer(float n)
     {
@@ -166,7 +179,7 @@ public class Mummy_Range : LivingObject
     }
 
     void DetectPlayer()
-    {
+    {        
         // 공격 감지 범위 구현
         Collider2D[] hits = Physics2D.OverlapBoxAll(detectPoint.position, detectRange, 0f);
 
@@ -177,43 +190,89 @@ public class Mummy_Range : LivingObject
                 // 플레이어를 감지 했다면
                 if (hit.tag == "Player")
                 {
-                    enemyState = EnemyState.ATTACK;
-                    return;                    
+                    // y값 계산
+                    float offsetPosY = Mathf.Abs(hit.transform.position.y - pivot.position.y);
+
+                    // 0.5f 차이라면 공격 상태!
+                    if(offsetPosY <= 0.5f)
+                    {
+                        enemyState = EnemyState.ATTACK;
+                        return;
+                    }
                 }
             }
             else
             {
                 Debug.Log("플레이어 미발견");
-            }
+            }                    
         }
     }
 
     void Gauging()
-    {
-        if (missile.GetColorAlpha() >= 1f)
+    {        
+        if(attackGauge.fillAmount >= 1f)
         {
-            Vector2 missileDir = (target.transform.position + new Vector3(0f, 0.5f, 0f) - missilePoint.position).normalized;
-            float missileSpeed = 100f;
-            missile.Fire(missileSpeed, missileDir);
-
+            attackGauge.fillAmount = 0f;
             animator.speed = 1f;
             enemyState = EnemyState.ATTACK;
             return;
         }
-        missile.SetColor(new Color(0f, 0f, 0f, 30f / 255f));        
+
+        attackGauge.fillAmount += attackSpeed / 100f;
     }
 
     // Attack 애니메이션 이벤트 함수 -> 공격 게이지 시작
     public void StartAttackGauge()
     {
         animator.speed = 0f;
-        missile = Missile.Create(missilePoint.position, damage);
         enemyState = EnemyState.GAUGING;
     }
 
     // Attack 애니메이션 이벤트 함수 -> 공격 끝 -> 범위 내 플레이어에게 데미지 적용
     public void EndAttack()
-    {
+    {        
+        // 레이캐스트 기즈모 표시
+
+        for (int i = 0; i < 5; i++)
+        {
+            Debug.DrawRay(pivot.position, new Vector3(dir, 1f, 0) * dirs[i] * lens[i], Color.yellow);
+        }
+
+        // 플레이어에게 데미지를 주었는지 판단
+        bool isDamaed = false;
+        // 레이캐스트 
+        for (int i = 0; i < 5; i++)
+        {
+            // 데미지를 주었다면 break
+            if (isDamaed)
+            {
+                break;
+            }
+            RaycastHit2D[] hits = Physics2D.RaycastAll(pivot.position, new Vector3(dir, 1f, 0) * dirs[i], lens[i]);
+            foreach (RaycastHit2D hit in hits)
+            {
+                if(hit.collider.tag == "Player")
+                {
+                    // 플레이어 데미지 주기
+
+                    // y값 계산
+                    float offsetPosY = Mathf.Abs(hit.transform.position.y - pivot.position.y);
+
+
+                    if(offsetPosY <= 0.5f)
+                    {
+                        // 데미지는 한번만 주기 때문에 true
+                        isDamaed = true;
+
+                        LivingObject livingObject = hit.collider.gameObject.GetComponent<LivingObject>();
+                        livingObject.OnDamage(damage);                                        
+                        // foreach문 빠져나가기
+                        break;                    
+                    }
+                }
+            }
+        }
+
         enemyState = EnemyState.IDLE;
         animator.SetInteger("State", (int)enemyState);
     }
@@ -237,7 +296,7 @@ public class Mummy_Range : LivingObject
             Vector2 moveDir = (target.transform.position - pivot.position).normalized;
 
             // 바라보는 방향 설정
-            if (moveDir.x > 0f)
+            if(moveDir.x > 0f)
             {
                 transform.rotation = new Quaternion(0f, 0f, 0f, 0f);
                 dir = 1;
@@ -254,13 +313,13 @@ public class Mummy_Range : LivingObject
     }
 
     public override void OnDamage(float damage)
-    {
+    {        
 
         // 체력 감소
         base.OnDamage(damage);
 
         // 틴트 효과
-        StartCoroutine(SetTint());
+        StartCoroutine(SetTint());        
 
         // HIT 효과
         DamagePopup.Create(transform.position, false);
@@ -271,29 +330,29 @@ public class Mummy_Range : LivingObject
         // 카메라 흔들림
         StartCoroutine(cameraShake.ShakeCamera(0.01f, 0.05f));
     }
-
+    
     // 틴트 효과
     IEnumerator SetTint()
-    {
-        while (true)
-        {
-            if (materialTintColor.a > 0)
+    {        
+        while(true)
+        {            
+            if(materialTintColor.a > 0)
             {
                 materialTintColor.a = Mathf.Clamp01(materialTintColor.a - 6f * Time.deltaTime);
-
+                
                 material.SetColor("_Tint", materialTintColor);
             }
             else
             {
-                materialTintColor = new Color(1f, 0f, 0f, 150f / 255f);
-                StopCoroutine(SetTint());
+                materialTintColor = new Color(1f, 0f, 0f, 150f / 255f);                
+                StopCoroutine(SetTint());                
                 break;
-            }
+            }          
 
             yield return new WaitForSeconds(0.1f);
         }
     }
-
+    
     // Dissolve 효과
     IEnumerator SetDissolve()
     {
@@ -301,8 +360,8 @@ public class Mummy_Range : LivingObject
         material.shader = Shader.Find(dissolveShader);
         float dissolveSpeed = 5f;
         while (true)
-        {
-            if (dissolveAmout < 1f)
+        {            
+            if(dissolveAmout < 1f)
             {
                 dissolveAmout = Mathf.Clamp01(dissolveAmout + dissolveSpeed * Time.deltaTime);
                 material.SetFloat("_DissolveAmount", dissolveAmout);
@@ -322,5 +381,14 @@ public class Mummy_Range : LivingObject
         animator.speed = 0f;
         StartCoroutine(SetDissolve());
         Destroy(gameObject, 1f);
-    }   
+    }
+
+    public void OnAttackUI()
+    {
+        attackUI.SetActive(true);
+    }
+    public void OffAttackUI()
+    {
+        attackUI.SetActive(false);
+    }
 }

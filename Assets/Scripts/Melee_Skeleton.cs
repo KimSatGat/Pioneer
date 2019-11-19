@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Zombie_Range : LivingObject
+public class Melee_Skeleton : Enemy
 {
     enum EnemyState { IDLE, TRACE, ATTACK, DIE, GAUGING };
 
@@ -14,17 +14,19 @@ public class Zombie_Range : LivingObject
     private Player target;              // 가장 가까운 플레이어
     private EnemyState enemyState;      // 적 상태
     private CameraShake cameraShake;
-
-    public Transform pivot;             // 피봇
+    
+    public Transform attackPivot;      // 공격 레이가 나가는 피봇
     public GameObject attackUI;         // 공격 UI
-    public RectTransform attackGauge;      // 공격게이지 UI
+    public Image attackGauge;           // 공격게이지 UI
     public Transform detectPoint;       // 공격 감지 피봇
-    public Vector2 detectRange;         // 공격 감지 범위    
+    public Vector2 detectRange;         // 공격 감지 범위
+    public float[] lens = { 1.26f, 1.31f, 1.32f, 1.31f, 1.24f };   // 공격 감지 레이캐스트 마다 길이 할당 -> 기즈모로 직접 길이 구함..
+    List<Vector2> dirs = new List<Vector2>();   // 공격 감지 방향 리스트
 
     private Material material;
     private Color materialTintColor;    // 틴트 효과를 위한 색상값
     private string dissolveShader = "Shader Graphs/Dissolve";
-    private float dissolveAmout = 0f;   // Dissolve 효과 값
+    private float dissolveAmout = 0f;   // Dissolve 효과 값 
 
 
     private Animator animator;
@@ -51,7 +53,7 @@ public class Zombie_Range : LivingObject
 
     void Awake()
     {
-        players = GameObject.FindObjectsOfType<Player>();           // 플레이어 리스트 담기
+        players = GameObject.FindObjectsOfType<Player>();  // 플레이어 리스트 담기
         cameraShake = GameObject.FindObjectOfType<CameraShake>();   // 메인카메라의 CameraShake 컴포넌트 할당
 
         animator = GetComponent<Animator>();
@@ -60,6 +62,15 @@ public class Zombie_Range : LivingObject
         healthBarFade = GetComponentInChildren<HealthBarFade>();
 
         materialTintColor = new Color(1f, 0f, 0f, 150f / 255f);
+
+        // 공격 감지 레이캐스트 방향 할당
+        for (int i = 0; i < lens.Length; i++)
+        {
+            dirs.Add(new Vector2(
+                Mathf.Cos((-20 + 10f * i) * Mathf.Deg2Rad),
+                Mathf.Sin((-20 + 10f * i) * Mathf.Deg2Rad)
+                ));
+        }
     }
 
     void Start()
@@ -68,7 +79,7 @@ public class Zombie_Range : LivingObject
         myUpdate = StartCoroutine(MyUpdate());
 
         onDeath += OffAttackUI;     // 죽었을 때 이벤트 추가
-        onDeath += SetOnDeath;
+        onDeath += SetOnDeath;      
     }
 
     IEnumerator MyUpdate()
@@ -110,7 +121,7 @@ public class Zombie_Range : LivingObject
     {
         // Draw a yellow sphere at the transform's position
         Gizmos.color = new Color(1f, 1f, 0f, 0.3f);
-        Gizmos.DrawCube(detectPoint.position, detectRange);
+        Gizmos.DrawCube(detectPoint.position, detectRange);        
     }
 
     // n초 마다 가장 가까운 플레이어를 찾기
@@ -182,7 +193,7 @@ public class Zombie_Range : LivingObject
                     // y값 계산
                     float offsetPosY = Mathf.Abs(hit.transform.position.y - pivot.position.y);
 
-                    if (offsetPosY <= 0.5f)
+                    if(offsetPosY <= 0.5f)
                     {
                         enemyState = EnemyState.ATTACK;
                         return;
@@ -198,14 +209,15 @@ public class Zombie_Range : LivingObject
 
     void Gauging()
     {
-        if (attackGauge.sizeDelta.x >= 1f)
+        if (attackGauge.fillAmount >= 1f)
         {
-            attackGauge.sizeDelta = new Vector2(0f, 1f);
+            attackGauge.fillAmount = 0f;
             animator.speed = 1f;
             enemyState = EnemyState.ATTACK;
             return;
         }
-        attackGauge.sizeDelta += new Vector2(attackSpeed / 100f, 0f);
+
+        attackGauge.fillAmount += attackSpeed / 100f;
     }
 
     // Attack 애니메이션 이벤트 함수 -> 공격 게이지 시작
@@ -218,17 +230,45 @@ public class Zombie_Range : LivingObject
     // Attack 애니메이션 이벤트 함수 -> 공격 끝 -> 범위 내 플레이어에게 데미지 적용
     public void EndAttack()
     {
-        Collider2D[] hits = Physics2D.OverlapCapsuleAll(attackUI.transform.position,
-            new Vector2(0.97f, 0.76f),
-            CapsuleDirection2D.Horizontal,
-            0f);
+        // 레이캐스트 기즈모 표시
 
-        foreach (Collider2D hit in hits)
+        for (int i = 0; i < 5; i++)
         {
-            if (hit.tag == "Player")
+            Debug.DrawRay(attackPivot.position, new Vector3(dir, 1f, 0) * dirs[i] * lens[i], Color.yellow);
+        }
+
+        // 플레이어에게 데미지를 주었는지 판단
+        bool isDamaed = false;
+        // 레이캐스트 
+        for (int i = 0; i < 5; i++)
+        {
+            // 데미지를 주었다면 break
+            if (isDamaed)
             {
-                LivingObject livingObject = hit.gameObject.GetComponent<LivingObject>();
-                livingObject.OnDamage(damage);
+                break;
+            }
+            RaycastHit2D[] hits = Physics2D.RaycastAll(attackPivot.position, new Vector3(dir, 1f, 0) * dirs[i], lens[i]);
+            foreach (RaycastHit2D hit in hits)
+            {
+                if (hit.collider.tag == "Player")
+                {
+                    // 플레이어 데미지 주기
+
+                    // y값 계산
+                    float offsetPosY = Mathf.Abs(hit.transform.position.y - pivot.position.y);
+
+                    if(offsetPosY <= 0.5f)
+                    {
+                        // 데미지는 한번만 주기 때문에 true
+                        isDamaed = true;
+
+                        LivingObject livingObject = hit.collider.gameObject.GetComponent<LivingObject>();
+                        livingObject.OnDamage(damage);
+                        // foreach문 빠져나가기
+                        break;
+                    }
+
+                }
             }
         }
 
@@ -344,7 +384,6 @@ public class Zombie_Range : LivingObject
 
     public void OnAttackUI()
     {
-        attackUI.transform.position = target.transform.position;
         attackUI.SetActive(true);
     }
     public void OffAttackUI()

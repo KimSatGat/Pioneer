@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Missile : MonoBehaviour
+public class Enemy_Missile : MonoBehaviour
 {    
     private float damage;
-    private Rigidbody2D rigidbody2D;
+    private new Rigidbody2D rigidbody2D;
     private SpriteRenderer spriteRenderer;
 
     private void Start()
@@ -45,12 +45,11 @@ public class Missile : MonoBehaviour
             Destroy(gameObject);
         }
     }
-
-    // Create Missile
-    public static Missile Create(Vector2 CreatePos, float _damage)
+    
+    public static Enemy_Missile Create(Vector2 CreatePos, float _damage)
     {
-        Transform missileTransform = Instantiate(GameAssets.instance.pfMissile, CreatePos, Quaternion.identity);
-        Missile missile = missileTransform.GetComponent<Missile>();
+        Transform missileTransform = Instantiate(GameAssets.instance.pfEnemyMissile, CreatePos, Quaternion.identity);
+        Enemy_Missile missile = missileTransform.GetComponent<Enemy_Missile>();
         missile.SetDamage(_damage);
         
         return missile;

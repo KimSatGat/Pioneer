@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Skeleton_Melee : LivingObject
+public class Melee_Wolf : Enemy
 {
     enum EnemyState { IDLE, TRACE, ATTACK, DIE, GAUGING };
 
@@ -12,16 +12,14 @@ public class Skeleton_Melee : LivingObject
 
     private Player[] players;           // 추적할 플레이어 리스트
     private Player target;              // 가장 가까운 플레이어
-    private EnemyState enemyState;      // 적 상태
+    private EnemyState enemyState;      // 적 상태    
     private CameraShake cameraShake;
-
-    public Transform pivot;               // 피봇
-    public Transform attackPivot;      // 공격 레이가 나가는 피봇
+    
     public GameObject attackUI;         // 공격 UI
     public Image attackGauge;           // 공격게이지 UI
     public Transform detectPoint;       // 공격 감지 피봇
     public Vector2 detectRange;         // 공격 감지 범위
-    public float[] lens = { 1.26f, 1.31f, 1.32f, 1.31f, 1.24f };   // 공격 감지 레이캐스트 마다 길이 할당 -> 기즈모로 직접 길이 구함..
+    public float[] lens = { 1.53f, 1.48f, 1.39f, 1.28f, 1.155f };   // 공격 감지 레이캐스트 마다 길이 할당 -> 기즈모로 직접 길이 구함..
     List<Vector2> dirs = new List<Vector2>();   // 공격 감지 방향 리스트
 
     private Material material;
@@ -54,7 +52,7 @@ public class Skeleton_Melee : LivingObject
 
     void Awake()
     {
-        players = GameObject.FindObjectsOfType<Player>();  // 플레이어 리스트 담기
+        players = GameObject.FindObjectsOfType<Player>();           // 플레이어 리스트 담기
         cameraShake = GameObject.FindObjectOfType<CameraShake>();   // 메인카메라의 CameraShake 컴포넌트 할당
 
         animator = GetComponent<Animator>();
@@ -63,13 +61,13 @@ public class Skeleton_Melee : LivingObject
         healthBarFade = GetComponentInChildren<HealthBarFade>();
 
         materialTintColor = new Color(1f, 0f, 0f, 150f / 255f);
-
+        
         // 공격 감지 레이캐스트 방향 할당
-        for (int i = 0; i < lens.Length; i++)
+        for (int i = 0; i < 5; i++)
         {
             dirs.Add(new Vector2(
-                Mathf.Cos((-20 + 10f * i) * Mathf.Deg2Rad),
-                Mathf.Sin((-20 + 10f * i) * Mathf.Deg2Rad)
+                Mathf.Cos((5 + 13.75f * i) * Mathf.Deg2Rad),
+                Mathf.Sin((5 + 13.75f * i) * Mathf.Deg2Rad)
                 ));
         }
     }
@@ -80,8 +78,9 @@ public class Skeleton_Melee : LivingObject
         myUpdate = StartCoroutine(MyUpdate());
 
         onDeath += OffAttackUI;     // 죽었을 때 이벤트 추가
-        onDeath += SetOnDeath;      
+        onDeath += SetOnDeath;
     }
+
 
     IEnumerator MyUpdate()
     {
@@ -194,7 +193,7 @@ public class Skeleton_Melee : LivingObject
                     // y값 계산
                     float offsetPosY = Mathf.Abs(hit.transform.position.y - pivot.position.y);
 
-                    if(offsetPosY <= 0.5f)
+                    if(offsetPosY < 0.5f)
                     {
                         enemyState = EnemyState.ATTACK;
                         return;
@@ -235,7 +234,7 @@ public class Skeleton_Melee : LivingObject
 
         for (int i = 0; i < 5; i++)
         {
-            Debug.DrawRay(attackPivot.position, new Vector3(dir, 1f, 0) * dirs[i] * lens[i], Color.yellow);
+            Debug.DrawRay(pivot.position, new Vector3(dir, 1f, 0) * dirs[i] * lens[i], Color.yellow);
         }
 
         // 플레이어에게 데미지를 주었는지 판단
@@ -248,7 +247,7 @@ public class Skeleton_Melee : LivingObject
             {
                 break;
             }
-            RaycastHit2D[] hits = Physics2D.RaycastAll(attackPivot.position, new Vector3(dir, 1f, 0) * dirs[i], lens[i]);
+            RaycastHit2D[] hits = Physics2D.RaycastAll(pivot.position, new Vector3(dir, 1f, 0) * dirs[i], lens[i]);
             foreach (RaycastHit2D hit in hits)
             {
                 if (hit.collider.tag == "Player")
@@ -268,7 +267,6 @@ public class Skeleton_Melee : LivingObject
                         // foreach문 빠져나가기
                         break;
                     }
-
                 }
             }
         }
@@ -293,7 +291,7 @@ public class Skeleton_Melee : LivingObject
             animator.SetInteger("State", (int)enemyState);
 
             // 방향 구하기
-            Vector2 moveDir = (target.transform.position - pivot.position).normalized;
+            Vector2 moveDir = (target.transform.position - transform.position).normalized;
 
             // 바라보는 방향 설정
             if (moveDir.x > 0f)
