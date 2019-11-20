@@ -1,13 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using EnumSpace;
 
 public class Player_Missile : MonoBehaviour
 {
     private float damage;
     private float speed;
     private Vector2 moveDir;
-    private Rigidbody2D rigidbody2D;    
+    private Rigidbody2D rigidbody2D;        
 
     private void Start()
     {
@@ -20,8 +21,8 @@ public class Player_Missile : MonoBehaviour
     {
         if (collision.tag == "Enemy")
         {
-            LivingObject livingObject = collision.GetComponent<LivingObject>();
-            livingObject.OnDamage(damage);
+            Enemy enemy = collision.GetComponent<Enemy>();
+            enemy.OnDamage(damage, PlayerType.RANGE);
 
             Destroy(gameObject);
         }

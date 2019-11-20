@@ -477,7 +477,7 @@ GameObject:
   - component: {fileID: 7809536086607946539}
   - component: {fileID: 7809536086607946536}
   m_Layer: 0
-  m_Name: Mummy_Range
+  m_Name: Range_Mummy
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

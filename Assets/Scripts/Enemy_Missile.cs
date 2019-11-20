@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class Enemy_Missile : MonoBehaviour
 {    
     private float damage;
@@ -39,8 +40,8 @@ public class Enemy_Missile : MonoBehaviour
     {
         if(collision.tag == "Player")
         {
-            LivingObject livingObject = collision.GetComponent<LivingObject>();
-            livingObject.OnDamage(damage);
+            Player player = collision.GetComponent<Player>();
+            player.OnDamage(damage);
 
             Destroy(gameObject);
         }

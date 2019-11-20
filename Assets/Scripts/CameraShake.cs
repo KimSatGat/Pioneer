@@ -3,7 +3,21 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class CameraShake : MonoBehaviour
-{    
+{
+    public static CameraShake _instance;
+
+    public static CameraShake instance
+    {
+        get
+        {
+            if(_instance == null)
+            {
+                _instance = FindObjectOfType<CameraShake>();
+            }
+            return _instance;
+        }
+    }
+
     public IEnumerator ShakeCamera(float duration, float magnitude)
     {
         Vector3 originalPos = transform.position;

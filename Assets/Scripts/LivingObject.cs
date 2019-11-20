@@ -4,8 +4,8 @@ using UnityEngine;
 // 생명체 최상위 클래스
 // 체력, 공격력, 이동 속도, 데미지, 사망 기능, 사망 이벤트 제공
 
-public class LivingObject : MonoBehaviour, IDamageable
-{
+public class LivingObject : MonoBehaviour
+{    
     public float startingHP = 100f; // 시작 체력
     public float HP;                // 현재 체력
     public float damage;            // 공격력 
@@ -24,20 +24,7 @@ public class LivingObject : MonoBehaviour, IDamageable
 
     // 생명체 초기화 기능
     public virtual void InitObject() { }
-
-    // 데미지를 입는 기능
-    public virtual void OnDamage(float damage)
-    {
-        // 데미지만큼 체력 감소
-        HP -= damage;
-
-        // 체력이 0 이하이고 아직 죽지 않았다면 Die 메서드 실행
-        if(HP <= 0 && !dead)
-        {
-            Die();
-        }
-    }
-
+    
     // 체력 회복 기능
     public virtual void RestoreHP(float heal)
     {

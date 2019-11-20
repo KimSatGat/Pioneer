@@ -1,11 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using EnumSpace;
 
 public class Range_Player : Player
 {
-    enum PlayerState { IDLE, RUN, ATTACK, DIE };
-
     public Joystick joystick;       // 조이스틱
     public Transform attackPoint;   // 공격 지점
     public Transform missilePoint;  // 미사일 발사 지점       

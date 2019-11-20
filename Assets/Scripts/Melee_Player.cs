@@ -1,17 +1,16 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using EnumSpace;
 
 public class Melee_Player : Player
-{
-    enum PlayerState { IDLE, RUN, ATTACK, DIE };
-
+{    
     public Joystick joystick;       // 조이스틱
     public Transform attackPoint;   // 공격 감지 피봇
     public Transform missilePoint;  // 미사일 발사지점
     public Vector2 attackRange;     // 공격 범위
 
-    private PlayerState playerState;    // 플레이어 상태    
+    private PlayerState playerState;    // 플레이어 상태        
 
     private Vector3 moveVector; // 플레이어 이동벡터
     private Animator animator;  // 플레이어 애니메이터    
@@ -33,6 +32,7 @@ public class Melee_Player : Player
         attackSpeed = 1f;
         dead = false;
         playerState = PlayerState.IDLE;     // 플레이어 상태 초기화
+        playerType = PlayerType.MELEE;      // 플레이어 타입
         dir = 1;                            // 오른쪽 방향 할당
         moveVector = Vector3.zero;          // 플레이어 이동벡터 초기화
     }
@@ -159,9 +159,8 @@ public class Melee_Player : Player
 
                     float offsetPosY = Mathf.Abs(hitPosY - transform.position.y);
                     if (offsetPosY <= 0.5f)
-                    {
-                        LivingObject livingObject = hit.GetComponent<LivingObject>();
-                        livingObject.OnDamage(damage);
+                    {                        
+                        enemy.OnDamage(damage, PlayerType.MELEE);
                     }
                 }
             }

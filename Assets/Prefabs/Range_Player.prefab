@@ -798,8 +798,8 @@ MonoBehaviour:
   attackSpeed: 0
   dir: 0
   dead: 0
-  joystick: {fileID: 9130358142160179976, guid: ce66ba9c9a6ec8747b48b0632bb2cda9,
-    type: 3}
+  playerType: 0
+  joystick: {fileID: 0}
   attackPoint: {fileID: 2526195909291402813}
   missilePoint: {fileID: 2526195911148573453}
   attackRange: {x: 7, y: 2}
