@@ -43,9 +43,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86546b7396d1da54eb5a663611cdc4b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pfDamagePopup: {fileID: 5441616640817915023, guid: 3c4b2f2d186ae2a42833e7cd28ef42ca,
-    type: 3}
+  pfPopup: {fileID: 5441616640817915023, guid: 3c4b2f2d186ae2a42833e7cd28ef42ca, type: 3}
   pfPlayerMissile: {fileID: 6731368872975591064, guid: 4a94f7df9e80ef84a8f1462b590bf282,
     type: 3}
   pfEnemyMissile: {fileID: 399973439256866025, guid: 78b11cdb9aeec7d48a68bef2c5838c5c,
     type: 3}
+  enemyList:
+  - {fileID: 300091122886022828, guid: a0fee25dbc744814d889ac96a39b72fe, type: 3}
+  - {fileID: 3705555934289724210, guid: eedee4eac5e4eb04692d1214373786a8, type: 3}
+  - {fileID: 5403518212655598984, guid: 28d65313d227f3944bedadd1e30c50f5, type: 3}
+  - {fileID: 7809536086607946711, guid: 50a8a1f4b6441044da6ff80a6f2a618d, type: 3}
+  - {fileID: 5510866292492231205, guid: 15f3307cb05779b4cb3d4ce2a3ab7196, type: 3}

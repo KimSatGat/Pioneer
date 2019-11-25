@@ -178,7 +178,7 @@ public class Melee_Skeleton : Enemy
                 if (hit.tag == "Player")
                 {
                     // y값 계산
-                    float offsetPosY = Mathf.Abs(hit.transform.position.y - pivot.position.y);
+                    float offsetPosY = Mathf.Abs(hit.gameObject.transform.position.y - pivot.position.y);
 
                     if(offsetPosY <= 0.5f)
                     {

@@ -179,7 +179,7 @@ public class Melee_Demon : Enemy
                 if (hit.tag == "Player")
                 {
                     // y값 계산
-                    float offsetPosY = Mathf.Abs(hit.transform.position.y - pivot.position.y);
+                    float offsetPosY = Mathf.Abs(hit.gameObject.transform.position.y - pivot.position.y);
 
                     // 0.5f 차이라면 공격 상태!
                     if(offsetPosY <= 0.5f)

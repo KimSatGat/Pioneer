@@ -5,7 +5,6 @@ using UnityEngine;
 public class GameAssets : MonoBehaviour
 {
     private static GameAssets _instance;
-
     public static GameAssets instance
     {
         get
@@ -17,8 +16,12 @@ public class GameAssets : MonoBehaviour
             return _instance;
         }
     }
-
-    public Transform pfDamagePopup;
+    
+    public Transform pfPopup;    
     public Transform pfPlayerMissile;
     public Transform pfEnemyMissile;
+
+    public List<Transform> enemyList;
+    public List<Transform> abilityList;
+    
 }

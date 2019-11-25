@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using EnumSpace;
 
-public class DamagePopup : MonoBehaviour
+public class Popup : MonoBehaviour
 {
     private const float DISAPPEAR_TIMER_MAX = 1f;
     private static int sortingOrder;
@@ -11,27 +12,34 @@ public class DamagePopup : MonoBehaviour
     private TextMeshPro textMesh;
     private float disappearTimer;
     private Color textColor;
-    private Vector3 moveVector;
+    private Vector3 moveVector;    
 
     private void Awake()
     {
         textMesh = transform.GetComponent<TextMeshPro>();
     }
 
-    public void Setup(bool isCritical)
+    public void Setup(PopupType popupType)
     {
-        textMesh.SetText("HIT!");
-        if(!isCritical)
+        switch(popupType)
         {
-            textMesh.fontSize = 5;
-            textColor = new Color(1f, 197f / 255f, 0f);
+            case PopupType.HIT:
+                textMesh.SetText("HIT!");
+                textMesh.fontSize = 5;
+                textColor = new Color(1f, 197f / 255f, 0f);
+                break;
+            case PopupType.CRITICAL:
+                textMesh.SetText("CRITICAL!");
+                textMesh.fontSize = 7;
+                textColor = new Color(1f, 55f / 255f, 0f);
+                break;
+            case PopupType.MISS:
+                textMesh.SetText("MISS~");
+                textMesh.fontSize = 5;
+                textColor = new Color(233f / 255f, 122f / 255f, 216f / 255f);
+                break;
         }
-        else
-        {
-            textMesh.fontSize = 7;
-            textColor = new Color(1f, 55f / 255f, 0f);
-        }
-        textMesh.color = textColor;
+        textMesh.color = textColor;        
         disappearTimer = DISAPPEAR_TIMER_MAX;
 
         sortingOrder++;
@@ -72,15 +80,13 @@ public class DamagePopup : MonoBehaviour
             }
         }
     }
-
-    // Create DamagePopup
-    public static DamagePopup Create(Vector3 position, bool isCritical)
+    
+    public static Popup CreatePopup(Vector3 position, PopupType popupType)
     {
-        Transform damagePopupTransform = Instantiate(GameAssets.instance.pfDamagePopup, position, Quaternion.identity);
-        DamagePopup damagePopup = damagePopupTransform.GetComponent<DamagePopup>();
-        damagePopup.Setup(isCritical);
+        Transform hitPopupTransform = Instantiate(GameAssets.instance.pfPopup, position, Quaternion.identity);
+        Popup hitPopup = hitPopupTransform.GetComponent<Popup>();
+        hitPopup.Setup(popupType);
 
-        return damagePopup;
-        
-    }
+        return hitPopup;        
+    }        
 }

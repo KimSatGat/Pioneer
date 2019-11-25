@@ -6,11 +6,10 @@ using EnumSpace;
 public class Melee_Player : Player
 {    
     public Joystick joystick;       // 조이스틱
-    public Transform attackPoint;   // 공격 감지 피봇
-    public Transform missilePoint;  // 미사일 발사지점
+    public Transform attackPoint;   // 공격 감지 피봇    
     public Vector2 attackRange;     // 공격 범위
 
-    private PlayerState playerState;    // 플레이어 상태        
+    private PlayerState playerState;    // 플레이어 상태     
 
     private Vector3 moveVector; // 플레이어 이동벡터
     private Animator animator;  // 플레이어 애니메이터    

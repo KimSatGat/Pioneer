@@ -11,7 +11,7 @@ public class Range_Mummy : Enemy
 
     private Player[] players;           // 추적할 플레이어 리스트
     private Player target;              // 가장 가까운 플레이어        
-    
+    private Transform missileTarget;    // 미사일 발사 타겟 좌표
     public Transform detectPoint;       // 공격 감지 피봇
     public Transform missilePoint;      // 미사일 생성 위치
     public Vector2 detectRange;         // 공격 감지 범위
@@ -166,6 +166,7 @@ public class Range_Mummy : Enemy
                 // 플레이어를 감지 했다면
                 if (hit.tag == "Player")
                 {
+                    missileTarget = hit.gameObject.transform;
                     enemyState = EnemyState.ATTACK;
                     return;                    
                 }
@@ -181,7 +182,7 @@ public class Range_Mummy : Enemy
     {
         if (missile.GetColorAlpha() >= 1f)
         {
-            Vector2 missileDir = (target.transform.position + new Vector3(0f, 0.5f, 0f) - missilePoint.position).normalized;
+            Vector2 missileDir = (missileTarget.transform.position + new Vector3(0f, 0.5f, 0f) - missilePoint.position).normalized;
             float missileSpeed = 100f;
             missile.Fire(missileSpeed, missileDir);
 

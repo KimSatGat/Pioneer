@@ -24,57 +24,73 @@ public class Enemy : LivingObject
 
         healthBarFade = GetComponentInChildren<HealthBarFade>();
     }
-
+    
     // 데미지를 입는 기능
     public void OnDamage(float damage, PlayerType hitPlayerType)
     {
-        // 데미지만큼 체력 감소
-        HP -= damage;
-
-        // 틴트 효과
-        StartCoroutine(SetTint());
-
-        // HIT 효과
-        DamagePopup.Create(transform.position, false);
-
-        // 카메라 흔들림
-        StartCoroutine(CameraShake.instance.ShakeCamera(0.01f, 0.05f));
-
-        // HP UI 감소 효과
-        healthBarFade.healthSystem.Damage((int)damage);
-
-
-        // 체력이 0 이하이고 죽지않고, 몬스터상태이고
-        if (HP <= 0 && !dead && enemyType == EnemyType.MONSTER)
+        switch(enemyType)
         {
-            // 근접에게 죽었다면
-            if (hitPlayerType == PlayerType.MELEE)
-            {
-                // 빨강 유령으로 변경
-                enemyType = EnemyType.GHOST_RED;
+            case EnemyType.MONSTER:
 
-            }
-            // 원거리에게 죽었다면
-            else if(hitPlayerType == PlayerType.RANGE)
-            {
-                // 파랑 유령으로 변경
-                enemyType = EnemyType.GHOST_BLUE;
-            }
+                // 데미지만큼 체력 감소
+                HP -= damage;
 
-            SetGhost();
-        } 
-        
-        // 빨강 유령 상태이고, 원거리 피해를 받았다면
-        else if (enemyType == EnemyType.GHOST_RED && hitPlayerType == PlayerType.RANGE)
-        {
-            Die();
-        }
+                // 틴트 효과
+                StartCoroutine(SetTint());
 
-        // 파랑 유령 상태이고, 근접 피해를 받았다면
-        else if(enemyType == EnemyType.GHOST_BLUE && hitPlayerType == PlayerType.MELEE)
-        {
-            Die();
-        }
+                // HIT 효과
+                Popup.CreatePopup(transform.position, PopupType.HIT);
+
+                // HP UI 감소 효과
+                healthBarFade.healthSystem.Damage((int)damage);
+
+                // 카메라 흔들림
+                StartCoroutine(CameraShake.instance.ShakeCamera(0.01f, 0.05f));
+
+                // 체력이 0 이하이고 죽지않았다면
+                if (HP <= 0 && !dead)
+                {
+                    // 근접에게 죽었다면
+                    if (hitPlayerType == PlayerType.MELEE)
+                    {
+                        // 빨강 유령으로 변경
+                        enemyType = EnemyType.GHOST_RED;
+
+                    }
+                    // 원거리에게 죽었다면
+                    else if (hitPlayerType == PlayerType.RANGE)
+                    {
+                        // 파랑 유령으로 변경
+                        enemyType = EnemyType.GHOST_BLUE;
+                    }
+
+                    SetGhost();
+                }
+                break;
+
+            case EnemyType.GHOST_RED:
+                if(hitPlayerType == PlayerType.RANGE)
+                {
+                    Die();
+                }
+                else
+                {
+                    // MISS 효과
+                    Popup.CreatePopup(transform.position, PopupType.MISS);
+                }
+                break;
+            case EnemyType.GHOST_BLUE:
+                if (hitPlayerType == PlayerType.MELEE)
+                {
+                    Die();
+                }
+                else
+                {
+                    // MISS 효과
+                    Popup.CreatePopup(transform.position, PopupType.MISS);
+                }
+                break;
+        }                                                                
     }
 
     public Vector3 GetPivot()

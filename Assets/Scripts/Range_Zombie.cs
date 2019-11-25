@@ -18,8 +18,7 @@ public class Range_Zombie : Enemy
     public Vector2 detectRange;         // 공격 감지 범위    
     
     private Animator animator;
-    private Rigidbody2D rigidbody2D;
-    private HealthBarFade healthBarFade;    // 체력바
+    private Rigidbody2D rigidbody2D;    
 
     protected override void OnEnable()
     {
@@ -166,8 +165,9 @@ public class Range_Zombie : Enemy
                 // 플레이어를 감지 했다면
                 if (hit.tag == "Player")
                 {
+                   
                     // y값 계산
-                    float offsetPosY = Mathf.Abs(hit.transform.position.y - pivot.position.y);
+                    float offsetPosY = Mathf.Abs(hit.gameObject.transform.position.y - pivot.position.y);
 
                     if (offsetPosY <= 0.5f)
                     {

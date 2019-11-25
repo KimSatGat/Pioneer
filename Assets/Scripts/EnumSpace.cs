@@ -5,4 +5,5 @@ namespace EnumSpace
     public enum PlayerType { MELEE, RANGE };
     public enum EnemyState { IDLE, TRACE, ATTACK, DIE, GAUGING, };
     public enum EnemyType { MONSTER, GHOST_RED, GHOST_BLUE };
+    public enum PopupType { HIT, CRITICAL, MISS};
 }

@@ -4,20 +4,26 @@ using UnityEngine;
 
 public class Joystick : MonoBehaviour
 {        
-    public GameObject circle, dot;
+    public GameObject background, pointer;
 
     private Touch oneTouch;
     private Vector2 touchPosition;
     private Vector2 moveDirection;
+    private Vector3 dir;
+    private float bgRadius;
+    private float distance;
 
     private void Start()
     {
-        circle.SetActive(false);
-        dot.SetActive(false);
+        background.SetActive(false);
+        pointer.SetActive(false);
+        bgRadius = background.gameObject.GetComponent<Transform>().localScale.y / 2;
     }
 
     private void Update()
     {
+        //Debug.Log("반지름: " + bgRadius);
+
         if(Input.touchCount > 0)
         {
             oneTouch = Input.GetTouch(0);
@@ -27,11 +33,11 @@ public class Joystick : MonoBehaviour
             switch(oneTouch.phase)
             {
                 case TouchPhase.Began:
-                    circle.SetActive(true);
-                    dot.SetActive(true);
+                    background.SetActive(true);
+                    pointer.SetActive(true);
 
-                    circle.transform.position = touchPosition;
-                    dot.transform.position = touchPosition;
+                    background.transform.position = touchPosition;
+                    pointer.transform.position = touchPosition;
                     break;
                 case TouchPhase.Stationary:
                     SetPlayerDir();
@@ -40,8 +46,8 @@ public class Joystick : MonoBehaviour
                     SetPlayerDir();
                     break;
                 case TouchPhase.Ended:
-                    circle.SetActive(false);
-                    dot.SetActive(false);
+                    background.SetActive(false);
+                    pointer.SetActive(false);
                     moveDirection = Vector2.zero;
                     break;
             }
@@ -50,21 +56,37 @@ public class Joystick : MonoBehaviour
 
     private void SetPlayerDir()
     {
-        dot.transform.position = touchPosition;
+        pointer.transform.position = touchPosition;
 
-        dot.transform.position = new Vector2(
-            Mathf.Clamp(dot.transform.position.x,
-            circle.transform.position.x - 0.7f,
-            circle.transform.position.x + 0.7f),
-            Mathf.Clamp(dot.transform.position.y,
-            circle.transform.position.y - 0.7f,
-            circle.transform.position.y + 0.7f));
+        distance = Vector3.Distance(pointer.transform.position, background.transform.position);
+        dir = (pointer.transform.position - background.transform.position).normalized;
 
-        moveDirection = (dot.transform.position - circle.transform.position).normalized;        
+        if (distance >= bgRadius)
+        {
+            pointer.transform.position = background.transform.position + (dir * bgRadius);
+        }          
+            /*
+            pointer.transform.position = new Vector2(
+                Mathf.Clamp(pointer.transform.position.x,
+                background.transform.position.x - bgRadius, // 0.7f
+                background.transform.position.x + bgRadius),
+                Mathf.Clamp(pointer.transform.position.y,
+                background.transform.position.y - bgRadius,
+                background.transform.position.y + bgRadius));
+                */       
+        moveDirection = (pointer.transform.position - background.transform.position).normalized;        
     }
 
     public Vector2 GetPlayerDir()
     {
-        return moveDirection;
+        // 조이스틱이 반지름의 1/3을 넘어가면 
+        if (distance > (bgRadius / 3))
+        {
+            return moveDirection;        
+        }
+        else
+        {
+            return Vector2.zero;
+        }
     }
 }

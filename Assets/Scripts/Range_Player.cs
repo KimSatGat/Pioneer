@@ -7,7 +7,7 @@ public class Range_Player : Player
 {
     public Joystick joystick;       // 조이스틱
     public Transform attackPoint;   // 공격 지점
-    public Transform missilePoint;  // 미사일 발사 지점       
+    public Transform missilePoint;  // 미사일 발사 지점
     public Vector2 attackRange;     // 공격 범위
     public float missileSpeed;      // 미사일 스피드
 
