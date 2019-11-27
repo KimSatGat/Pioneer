@@ -29,11 +29,11 @@ public class Melee_Skeleton : Enemy
     }
 
     // 능력치, 상태 값 설정
-    public override void InitObject()
+    public override void InitObject(int stageLevel)
     {
-        startingHP = 100f;
+        startingHP = 100f + ((100f * 0.1f) * stageLevel);
         HP = startingHP;
-        damage = 10f;
+        damage = 10f + ((10f * 0.1f) * stageLevel);
         moveSpeed = 30f;
         attackSpeed = 5f;
         dead = false;

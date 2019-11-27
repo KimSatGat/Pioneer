@@ -19,11 +19,11 @@ public class LivingObject : MonoBehaviour
     // 생명체가 활성화될때 상태를 리셋
     protected virtual void OnEnable()
     {        
-        InitObject();
+        InitObject(GameManager.instance.stageLevel);
     }
 
     // 생명체 초기화 기능
-    public virtual void InitObject() { }
+    public virtual void InitObject(int stageLevel) { }
     
     // 체력 회복 기능
     public virtual void RestoreHP(float heal)

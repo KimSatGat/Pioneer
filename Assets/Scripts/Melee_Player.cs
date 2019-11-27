@@ -22,12 +22,12 @@ public class Melee_Player : Player
         base.OnEnable();
     }
 
-    public override void InitObject()
+    public override void InitObject(int stageLevel)
     {
         startingHP = 100f;
         HP = startingHP;
         damage = 30f;
-        moveSpeed = 30f;
+        moveSpeed = 5f;
         attackSpeed = 1f;
         dead = false;
         playerState = PlayerState.IDLE;     // 플레이어 상태 초기화
@@ -72,7 +72,7 @@ public class Melee_Player : Player
     private void PlayerMove()
     {
         //transform.Translate(moveVector * moveSpeed * Time.deltaTime);  기존에 썻던 좌표값 변화를 통한 이동방식 -> 회전 했을때 반대 방향으로 가서 아래 방법을 씀
-        rigidbody2D.velocity = new Vector2(moveVector.x, moveVector.y);
+        rigidbody2D.velocity = new Vector2(moveVector.x * moveSpeed, moveVector.y * moveSpeed / 2);
     }
 
     // 플레이어 애니메이션

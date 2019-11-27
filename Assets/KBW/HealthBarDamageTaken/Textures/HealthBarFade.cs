@@ -20,11 +20,11 @@ public class HealthBarFade : MonoBehaviour
         damagedColor = damagedBarImage.color;
         damagedColor.a = 0f;
         damagedBarImage.color = damagedColor;
+        livingObject = transform.root.GetComponent<LivingObject>(); // 최상위 오브젝트의 LivingObject 가져오기
     }
 
     private void Start()
     {
-        livingObject = transform.root.GetComponent<LivingObject>(); // 최상위 오브젝트의 LivingObject 가져오기
         healthSystem = new HealthSystem((int)livingObject.HP);      // 오브젝트 HP 값 할당        
         SetHealth(healthSystem.GetHealthNormalized());              // 정규화해서 Bar에 할당
         healthSystem.OnDamaed += HealthSystem_OnDamaged;            // HealthSystem_OnDamaged 메서드 추가
