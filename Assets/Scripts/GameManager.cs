@@ -5,6 +5,7 @@ using TMPro;
 
 public class GameManager : MonoBehaviour
 {
+    // 싱글톤
     public static GameManager _instance;
     public static GameManager instance
     {
@@ -17,8 +18,12 @@ public class GameManager : MonoBehaviour
             return _instance;
         }
     }
+
+    // 플레이어 관리
     public Transform[] players;
     public Transform[] playerPosition;
+
+    // 몬스터 관리
     public Transform[] SpwanList;
     public Transform[] wave1_Pos;
     public Transform[] wave2_Pos;
@@ -26,11 +31,12 @@ public class GameManager : MonoBehaviour
     public Transform wave1_enemies;
     public Transform wave2_enemies;
     public Transform wave3_enemies;
+
+    // 스테이지 관리
     public TextMeshProUGUI stageText;
     public int stageLevel = 1;
     public int waveMonsterCount = 1;
-    public int maxMonsterCount = 6;
-    
+    public int maxMonsterCount = 6;    
 
     private void Awake()    
     {
@@ -56,7 +62,8 @@ public class GameManager : MonoBehaviour
     }
 
     private void Update()
-    {                
+    {             
+        /*
         if(instance.wave1_enemies.childCount <= 0)
         {
             instance.wave2_enemies.gameObject.SetActive(true);
@@ -73,6 +80,7 @@ public class GameManager : MonoBehaviour
             MakeStage();
             
         }
+        */
     }
 
     // 해상도, 가로 모드 설정
@@ -109,6 +117,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    // 다음 스테이지 생성
     void MakeStage()
     {
         // 몬스터 미리 생성해두기
@@ -139,5 +148,5 @@ public class GameManager : MonoBehaviour
 
         // 스테이지 갱신
         instance.stageText.text = "STAGE " + instance.stageLevel;
-    }
+    }    
 }

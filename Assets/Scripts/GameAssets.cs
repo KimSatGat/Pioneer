@@ -22,6 +22,5 @@ public class GameAssets : MonoBehaviour
     public Transform pfEnemyMissile;
 
     public List<Transform> enemyList;
-    public List<Transform> abilityList;
-    
+    public List<Sprite> abilitySprite;        
 }

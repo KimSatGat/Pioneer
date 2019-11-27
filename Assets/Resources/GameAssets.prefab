@@ -54,3 +54,7 @@ MonoBehaviour:
   - {fileID: 5403518212655598984, guid: 28d65313d227f3944bedadd1e30c50f5, type: 3}
   - {fileID: 7809536086607946711, guid: 50a8a1f4b6441044da6ff80a6f2a618d, type: 3}
   - {fileID: 5510866292492231205, guid: 15f3307cb05779b4cb3d4ce2a3ab7196, type: 3}
+  abilitySprite:
+  - {fileID: 21300000, guid: a64c5c6157df7ab4eb9c1b241f4ddd09, type: 3}
+  - {fileID: 21300000, guid: 734bce18803e4a34ab0087287e008928, type: 3}
+  - {fileID: 21300000, guid: 0ac52e23c85a2a945b1f3c3b0b00bf9b, type: 3}
