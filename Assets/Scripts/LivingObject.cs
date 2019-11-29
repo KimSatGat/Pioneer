@@ -36,6 +36,10 @@ public class LivingObject : MonoBehaviour
 
         // 체력 추가
         HP += heal;
+        if(HP >= startingHP)
+        {
+            HP = startingHP;
+        }
     }
 
     // 사망 처리
