@@ -20,7 +20,10 @@ public class GameAssets : MonoBehaviour
     public Transform pfPopup;    
     public Transform pfPlayerMissile;
     public Transform pfEnemyMissile;
+    public Transform pfDashEffect;
 
     public List<Transform> enemyList;
     public List<Sprite> abilitySprite;        
+
+    
 }

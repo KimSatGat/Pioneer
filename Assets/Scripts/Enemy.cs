@@ -26,7 +26,7 @@ public class Enemy : LivingObject
     }
     
     // 데미지를 입는 기능
-    public void OnDamage(float damage, PlayerType hitPlayerType)
+    public void OnDamage(float damage, PlayerType hitPlayerType, bool isCritical)
     {
         switch(enemyType)
         {
@@ -38,58 +38,27 @@ public class Enemy : LivingObject
                 // 틴트 효과
                 StartCoroutine(SetTint());
 
-                // HIT 효과
-                Popup.CreatePopup(transform.position, PopupType.HIT);
+                // HIT 효과 카메라 흔들림
+                if (isCritical)
+                {
+                    Popup.CreatePopup(transform.position, PopupType.CRITICAL);
+                    StartCoroutine(CameraShake.instance.ShakeCamera(0.01f, 0.1f));
+                }
+                else
+                {
+                    Popup.CreatePopup(transform.position, PopupType.HIT);
+                    StartCoroutine(CameraShake.instance.ShakeCamera(0.01f, 0.05f));
+                }
 
                 // HP UI 감소 효과
                 healthBarFade.healthSystem.Damage((int)damage);
-
-                // 카메라 흔들림
-                StartCoroutine(CameraShake.instance.ShakeCamera(0.01f, 0.05f));
-
+                
                 // 체력이 0 이하이고 죽지않았다면
                 if (HP <= 0 && !dead)
                 {
-                    // 근접에게 죽었다면
-                    if (hitPlayerType == PlayerType.MELEE)
-                    {
-                        // 빨강 유령으로 변경
-                        enemyType = EnemyType.GHOST_RED;
-
-                    }
-                    // 원거리에게 죽었다면
-                    else if (hitPlayerType == PlayerType.RANGE)
-                    {
-                        // 파랑 유령으로 변경
-                        enemyType = EnemyType.GHOST_BLUE;
-                    }
-
-                    SetGhost();
-                }
-                break;
-
-            case EnemyType.GHOST_RED:
-                if(hitPlayerType == PlayerType.RANGE)
-                {
                     Die();
                 }
-                else
-                {
-                    // MISS 효과
-                    Popup.CreatePopup(transform.position, PopupType.MISS);
-                }
-                break;
-            case EnemyType.GHOST_BLUE:
-                if (hitPlayerType == PlayerType.MELEE)
-                {
-                    Die();
-                }
-                else
-                {
-                    // MISS 효과
-                    Popup.CreatePopup(transform.position, PopupType.MISS);
-                }
-                break;
+                break;         
         }                                                                
     }
 
@@ -165,3 +134,30 @@ public class Enemy : LivingObject
         }
     }
 }
+
+
+/*
+ 2인용 모드 때 쓰일 코드
+ case EnemyType.GHOST_RED:
+                if(hitPlayerType == PlayerType.RANGE)
+                {
+                    Die();
+                }
+                else
+                {
+                    // MISS 효과
+                    Popup.CreatePopup(transform.position, PopupType.MISS);
+                }
+                break;
+            case EnemyType.GHOST_BLUE:
+                if (hitPlayerType == PlayerType.MELEE)
+                {
+                    Die();
+                }
+                else
+                {
+                    // MISS 효과
+                    Popup.CreatePopup(transform.position, PopupType.MISS);
+                }
+                break;
+ */

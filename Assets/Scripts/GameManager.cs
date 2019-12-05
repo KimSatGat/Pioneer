@@ -20,8 +20,8 @@ public class GameManager : MonoBehaviour
     }
 
     // 플레이어 관리
-    public Transform[] players;
-    public Transform[] playerPosition;
+    public Transform player;
+    public Transform playerPosition;
 
     // 몬스터 관리
     public Transform[] SpwanList;
@@ -101,8 +101,8 @@ public class GameManager : MonoBehaviour
     void ClearStage()
     {
         // 플레이어 원위치
-        players[0].position = playerPosition[0].position;
-        players[1].position = playerPosition[1].position;
+        player.position = playerPosition.position;
+        
 
         // 스테이지 레벨 상승
         instance.stageLevel++;

@@ -9,7 +9,7 @@ public class Range_Zombie : Enemy
     private Coroutine findNearPlayer;   // 추적 코루틴 변수
     private Coroutine myUpdate;         // Update 코루틴 변수
 
-    private Player[] players;           // 추적할 플레이어 리스트
+    private Player player;           // 추적할 플레이어 리스트
     private Player target;              // 가장 가까운 플레이어    
     
     public GameObject attackUI;         // 공격 UI
@@ -18,7 +18,7 @@ public class Range_Zombie : Enemy
     public Vector2 detectRange;         // 공격 감지 범위    
     
     private Animator animator;
-    private Rigidbody2D rigidbody2D;    
+    private Rigidbody2D rb;    
 
     protected override void OnEnable()
     {
@@ -42,10 +42,10 @@ public class Range_Zombie : Enemy
     {
         base.Awake();
 
-        players = GameObject.FindObjectsOfType<Player>();           // 플레이어 리스트 담기        
+        player = GameObject.FindObjectOfType<Player>();           // 플레이어 리스트 담기        
 
         animator = GetComponent<Animator>();
-        rigidbody2D = GetComponent<Rigidbody2D>();
+        rb = GetComponent<Rigidbody2D>();
     }
 
     void Start()
@@ -87,7 +87,7 @@ public class Range_Zombie : Enemy
 
         // 공격 모션               
         animator.SetInteger("State", (int)enemyState);
-        rigidbody2D.velocity = new Vector2(0f, 0f);
+        rb.velocity = new Vector2(0f, 0f);
     }
 
 
@@ -104,8 +104,8 @@ public class Range_Zombie : Enemy
     {
         while (true)
         {
-            // 둘다 죽었다면 찾기 중지
-            if (players[0].dead && players[1].dead)
+            // 플레이어가 죽었다면
+            if (player.dead)
             {
                 target = null;
 
@@ -114,41 +114,9 @@ public class Range_Zombie : Enemy
                 break;
             }
 
-            // P1가 살고 P2가 죽었다면
-            else if (!players[0].dead && players[1].dead)
-            {
-                target = players[0];
-            }
+            target = player;
 
-            // P1가 죽고 P2가 살았다면
-            else if (players[0].dead && !players[1].dead)
-            {
-                target = players[1];
-            }
-
-            // 둘 다 살았다면
-            else
-            {
-                // 거리 측정        
-                float EnemytoP1 = Vector2.Distance(players[0].transform.position, transform.position);
-                float EnemytoP2 = Vector2.Distance(players[1].transform.position, transform.position);
-
-                // P1이 더 가깝다면
-                if (EnemytoP1 < EnemytoP2)
-                {
-                    // P1 할당
-                    target = players[0];
-                }
-
-                // P2가 더 가깝다면
-                else
-                {
-                    // P2 할당
-                    target = players[1];
-                }
-            }
-
-            // 10초 마다 실행
+            // n초 마다 실행
             yield return new WaitForSeconds(n);
         }
     }
@@ -254,7 +222,7 @@ public class Range_Zombie : Enemy
             }
 
             // 이동            
-            rigidbody2D.velocity = moveDir * moveSpeed * Time.deltaTime;
+            rb.velocity = moveDir * moveSpeed * Time.deltaTime;
         }
     }
 

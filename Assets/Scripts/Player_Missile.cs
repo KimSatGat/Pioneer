@@ -22,7 +22,7 @@ public class Player_Missile : MonoBehaviour
         if (collision.tag == "Enemy")
         {
             Enemy enemy = collision.GetComponent<Enemy>();
-            enemy.OnDamage(damage, PlayerType.RANGE);
+            enemy.OnDamage(damage, PlayerType.RANGE, false);
 
             Destroy(gameObject);
         }

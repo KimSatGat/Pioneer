@@ -7187,7 +7187,7 @@ GameObject:
   - component: {fileID: 3714194666044688576}
   - component: {fileID: 914057097473355334}
   m_Layer: 0
-  m_Name: Melee_Player
+  m_Name: melee_player
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7210,6 +7210,7 @@ Transform:
   - {fileID: 3714194665668488717}
   - {fileID: 3714194665774936687}
   - {fileID: 3714194667103191423}
+  - {fileID: 7365447224734199695}
   - {fileID: 3714194666864999546}
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -7501,7 +7502,7 @@ CapsuleCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: -0.08407092, y: 0.9959564}
@@ -7527,10 +7528,11 @@ MonoBehaviour:
   dir: 0
   dead: 0
   playerType: 0
-  joystick: {fileID: 9130358142160179976, guid: ce66ba9c9a6ec8747b48b0632bb2cda9,
-    type: 3}
+  joystick: {fileID: 0}
   attackPoint: {fileID: 3714194667103191423}
+  dashPoint: {fileID: 7365447224734199695}
   attackRange: {x: 1, y: 1}
+  dashRange: {x: 5, y: 8}
 --- !u!1 &3714194666049330696
 GameObject:
   m_ObjectHideFlags: 0
@@ -12757,7 +12759,7 @@ RectTransform:
   m_Children:
   - {fileID: 5000121668284272165}
   m_Father: {fileID: 3714194666044688598}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -14310,7 +14312,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3714194667103191422}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2, y: 0.8, z: 0}
+  m_LocalPosition: {x: 1.86, y: 0.8, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 3714194666044688598}
@@ -14683,3 +14685,33 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!1 &7635334195449313338
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7365447224734199695}
+  m_Layer: 0
+  m_Name: DashPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7365447224734199695
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7635334195449313338}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 5.33, y: 0.8, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 3714194666044688598}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

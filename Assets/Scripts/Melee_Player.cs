@@ -4,18 +4,22 @@ using UnityEngine;
 using EnumSpace;
 
 public class Melee_Player : Player
-{    
-    public Joystick joystick;       // 조이스틱
-    public Transform attackPoint;   // 공격 감지 피봇    
-    public Vector2 attackRange;     // 공격 범위
+{
+    public Joystick joystick;           // 조이스틱
+    public Transform attackPoint;       // 공격 감지 피봇    
+    public Transform dashPoint;         // 대시 감지 피봇    
+    public Vector2 attackRange;         // 공격 범위
+    public Vector2 dashRange;           // 대시 범위
 
     private PlayerState playerState;    // 플레이어 상태     
 
-    private Vector3 moveVector; // 플레이어 이동벡터
-    private Animator animator;  // 플레이어 애니메이터    
-    private new Rigidbody2D rigidbody2D;
+    private Vector3 moveVector;         // 플레이어 이동벡터
+    private Animator animator;          // 플레이어 애니메이터    
+    private Rigidbody2D rb;
 
     private HealthBarFade healthBarFade; // 체력바
+
+    private int criticalChance;         // 치명타 확률
 
     protected override void OnEnable()
     {
@@ -34,12 +38,13 @@ public class Melee_Player : Player
         playerType = PlayerType.MELEE;      // 플레이어 타입
         dir = 1;                            // 오른쪽 방향 할당
         moveVector = Vector3.zero;          // 플레이어 이동벡터 초기화
+        criticalChance = 15;                // 치명타 확률 15%
     }
 
     private void Awake()
     {
         animator = GetComponent<Animator>();
-        rigidbody2D = GetComponent<Rigidbody2D>();
+        rb = GetComponent<Rigidbody2D>();
 
         healthBarFade = GetComponentInChildren<HealthBarFade>();
     }
@@ -52,6 +57,7 @@ public class Melee_Player : Player
     void Update()
     {
         HandleInput();
+        Attack();
     }
 
     private void FixedUpdate()
@@ -64,15 +70,13 @@ public class Melee_Player : Player
     public void HandleInput()
     {
         Vector2 moveDir = joystick.GetPlayerDir();
-
         moveVector = moveDir;
     }
 
     // 플레이어 이동    
     private void PlayerMove()
     {
-        //transform.Translate(moveVector * moveSpeed * Time.deltaTime);  기존에 썻던 좌표값 변화를 통한 이동방식 -> 회전 했을때 반대 방향으로 가서 아래 방법을 씀
-        rigidbody2D.velocity = new Vector2(moveVector.x * moveSpeed, moveVector.y * moveSpeed / 2);
+        rb.velocity = new Vector2(moveVector.x * moveSpeed, moveVector.y * moveSpeed / 2);
     }
 
     // 플레이어 애니메이션
@@ -108,41 +112,75 @@ public class Melee_Player : Player
 
     // 공격 범위 기즈모
     public void OnDrawGizmos()
-    {        
-        Gizmos.color = new Color(1f,1f,1f,150/255f);
+    {
+        Gizmos.color = new Color(3f, 3f, 0f, 150 / 255f);
+        Gizmos.DrawCube(dashPoint.position, dashRange);
+
+        Gizmos.color = new Color(1f, 1f, 1f, 150 / 255f);
         Gizmos.DrawCube(attackPoint.position, attackRange);
     }
-        
+
     // 공격
     IEnumerator Attack()
     {
-        while (true)
+        while (!dead)
         {
-            Collider2D[] hits = Physics2D.OverlapBoxAll(attackPoint.position, attackRange, 0f);
-            if (hits.Length > 0)
+            Collider2D[] attackHits = Physics2D.OverlapBoxAll(attackPoint.position, attackRange, 0f);
+            bool isAttack = false;
+
+            if (playerState != PlayerState.ATTACK)
             {
-                foreach (Collider2D hit in hits)
+
+                // 공격 범위에 적이 있다면
+                if (attackHits.Length > 0)
                 {
-                    if (hit.tag == "Enemy" && moveVector.x == 0f)
+                    foreach (Collider2D attackHit in attackHits)
                     {
-                        Enemy enemy = hit.GetComponent<Enemy>();
-                        float hitPosY = enemy.GetPivot().y;
-
-                        float offsetPosY = Mathf.Abs(hitPosY - transform.position.y);
-
-                        if (offsetPosY <= 0.5f)
+                        if (attackHit.tag == "Enemy" && moveVector.x == 0f && moveVector.y == 0f)
                         {
                             playerState = PlayerState.ATTACK;
                             animator.SetInteger("State", (int)playerState);
-                            break;
+                            isAttack = true;
+                        }
+                    }
+                }
+
+                if (!isAttack)
+                {
+                    // Dash 체크
+                    Collider2D[] dashHits = Physics2D.OverlapBoxAll(dashPoint.position, dashRange, 0f);
+
+                    if (dashHits.Length > 0)
+                    {
+                        foreach (Collider2D dashHit in dashHits)
+                        {
+                            if (dashHit.tag == "Enemy" && moveVector.x == 0f && moveVector.y == 0f)
+                            {
+                                Enemy enemy = dashHit.GetComponent<Enemy>();
+                                Vector3 hitPos = enemy.GetPivot();
+
+                                // 대쉬
+                                float distance = Vector3.Distance(hitPos, transform.position);
+                                float offset = 1f;
+                                Vector3 dashDir = (hitPos - transform.position).normalized;
+                                Vector3 beforeDashPos = transform.position;
+
+                                transform.position += dashDir * (distance - offset);
+
+                                Transform dashEffect = Instantiate(GameAssets.instance.pfDashEffect, beforeDashPos, Quaternion.identity);
+                                float angle = Mathf.Atan2(dashDir.y, dashDir.x) * Mathf.Rad2Deg;
+                                dashEffect.eulerAngles = new Vector3(0f, 0f, angle);
+                                Debug.Log(distance);
+                                dashEffect.localScale = new Vector3(distance / 4f, 1f, 1f);
+                            }
                         }
                     }
                 }
             }
-            yield return new WaitForSeconds(attackSpeed);
+            yield return new WaitForSeconds(0.1f);
         }
     }
-  
+
     // 공격 모션이 끝 -> 적이 있다면 데미지 적용, 원래 상태로 복귀
     public void EndAttack()
     {
@@ -158,14 +196,23 @@ public class Melee_Player : Player
 
                     float offsetPosY = Mathf.Abs(hitPosY - transform.position.y);
                     if (offsetPosY <= 0.5f)
-                    {                        
-                        enemy.OnDamage(damage, PlayerType.MELEE);
+                    {
+                        bool isCritical;
+                        if (Random.Range(1, 101) < criticalChance)
+                        {
+                            isCritical = true;
+                        }
+                        else
+                        {
+                            isCritical = false;
+                        }
+                        enemy.OnDamage(damage, PlayerType.MELEE, isCritical);
                     }
                 }
             }
         }
-            // 원래 상태로 복귀
-            playerState = PlayerState.IDLE;
+        // 원래 상태로 복귀
+        playerState = PlayerState.IDLE;
         animator.SetInteger("State", (int)playerState);
     }
 
