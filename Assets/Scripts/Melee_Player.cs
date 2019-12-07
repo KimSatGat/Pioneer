@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using EnumSpace;
 
+
 public class Melee_Player : Player
 {
     public Joystick joystick;           // 조이스틱
@@ -20,6 +21,9 @@ public class Melee_Player : Player
     private HealthBarFade healthBarFade; // 체력바
 
     private int criticalChance;         // 치명타 확률
+
+   // private AudioSource player; // 플레이어 오디오 소스
+   // public AudioClip player_hited; // 플레이어 맞을 때 오디오 클립
 
     protected override void OnEnable()
     {
@@ -52,6 +56,8 @@ public class Melee_Player : Player
     void Start()
     {
         StartCoroutine("Attack");
+
+        //player = GetComponent<AudioSource>();
     }
 
     void Update()
@@ -114,7 +120,7 @@ public class Melee_Player : Player
     public void OnDrawGizmos()
     {
         Gizmos.color = new Color(3f, 3f, 0f, 150 / 255f);
-        Gizmos.DrawCube(dashPoint.position, dashRange);
+        //Gizmos.DrawCube(dashPoint.position, dashRange);
 
         Gizmos.color = new Color(1f, 1f, 1f, 150 / 255f);
         Gizmos.DrawCube(attackPoint.position, attackRange);
@@ -218,6 +224,8 @@ public class Melee_Player : Player
 
     public override void OnDamage(float damage)
     {
+        //맞을 때 소리 재생
+       // player.PlayOneShot(player_hited, 1f);
         // 체력 감소
         base.OnDamage(damage);
 
