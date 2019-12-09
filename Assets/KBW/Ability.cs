@@ -53,7 +53,8 @@ public class Ability : MonoBehaviour
         else if(idx == 1)
         {
             Melee_Player melee_Player = FindObjectOfType<Melee_Player>();
-            melee_Player.attackSpeed += 0.5f;            
+            melee_Player.attackSpeed += 0.5f;
+            melee_Player.SetAttackSpeed();
         }
 
         // 밀리플레이어 최대 체력 +50

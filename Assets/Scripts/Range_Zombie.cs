@@ -133,21 +133,10 @@ public class Range_Zombie : Enemy
                 // 플레이어를 감지 했다면
                 if (hit.tag == "Player")
                 {
-                   
-                    // y값 계산
-                    float offsetPosY = Mathf.Abs(hit.gameObject.transform.position.y - pivot.position.y);
-
-                    if (offsetPosY <= 0.5f)
-                    {
-                        enemyState = EnemyState.ATTACK;
-                        return;
-                    }
+                    enemyState = EnemyState.ATTACK;
+                    return;
                 }
-            }
-            else
-            {
-                Debug.Log("플레이어 미발견");
-            }
+            }            
         }
     }
 
@@ -186,6 +175,7 @@ public class Range_Zombie : Enemy
                 player.OnDamage(damage);
             }
         }
+        Instantiate(GameAssets.instance.pfOuter2, attackUI.transform.position, Quaternion.identity);
 
         enemyState = EnemyState.IDLE;
         animator.SetInteger("State", (int)enemyState);
@@ -196,7 +186,7 @@ public class Range_Zombie : Enemy
     {
         if (target != null)
         {
-            if (enemyState == EnemyState.ATTACK)
+            if (enemyState == EnemyState.ATTACK || enemyState == EnemyState.GAUGING)
             {
                 return;
             }

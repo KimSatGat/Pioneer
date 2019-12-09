@@ -46,10 +46,12 @@ MonoBehaviour:
   pfPopup: {fileID: 5441616640817915023, guid: 3c4b2f2d186ae2a42833e7cd28ef42ca, type: 3}
   pfPlayerMissile: {fileID: 6731368872975591064, guid: 4a94f7df9e80ef84a8f1462b590bf282,
     type: 3}
-  pfEnemyMissile: {fileID: 399973439256866025, guid: 78b11cdb9aeec7d48a68bef2c5838c5c,
+  pfEnemyMissile: {fileID: 8643519185987144262, guid: 315050d378b700943aff76df62626fe5,
     type: 3}
   pfDashEffect: {fileID: 1471432144868097948, guid: 9529419e70dee414dae3164b0b2d153b,
     type: 3}
+  pfSlash: {fileID: 4492048870036804, guid: 1f8e5b5b2975a0b468e4ed5a4d40eae8, type: 3}
+  pfOuter2: {fileID: 4720185069528598, guid: 6eff7de08ab06964199af37be755545d, type: 3}
   enemyList:
   - {fileID: 300091122886022828, guid: a0fee25dbc744814d889ac96a39b72fe, type: 3}
   - {fileID: 3705555934289724210, guid: eedee4eac5e4eb04692d1214373786a8, type: 3}

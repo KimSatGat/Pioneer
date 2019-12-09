@@ -36,7 +36,9 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI stageText;
     public int stageLevel = 1;
     public int waveMonsterCount = 1;
-    public int maxMonsterCount = 6;    
+    public int maxMonsterCount = 6;
+
+    public GameObject abilityPanel;
 
     private void Awake()    
     {
@@ -62,8 +64,7 @@ public class GameManager : MonoBehaviour
     }
 
     private void Update()
-    {             
-        /*
+    {                     
         if(instance.wave1_enemies.childCount <= 0)
         {
             instance.wave2_enemies.gameObject.SetActive(true);
@@ -76,11 +77,10 @@ public class GameManager : MonoBehaviour
 
         if(instance.wave3_enemies.childCount <= 0)
         {
-            ClearStage();
+            //ClearStage();
             MakeStage();
-            
-        }
-        */
+            abilityPanel.SetActive(true);
+        }        
     }
 
     // 해상도, 가로 모드 설정
@@ -103,7 +103,6 @@ public class GameManager : MonoBehaviour
         // 플레이어 원위치
         player.position = playerPosition.position;
         
-
         // 스테이지 레벨 상승
         instance.stageLevel++;
         // 5단위인지 체크해서 최대 적 수 증가

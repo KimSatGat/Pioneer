@@ -6,13 +6,15 @@ using UnityEngine;
 public class Enemy_Missile : MonoBehaviour
 {    
     private float damage;
-    private new Rigidbody2D rigidbody2D;
+    private Rigidbody2D rb;
     private SpriteRenderer spriteRenderer;
+    private float gauge;
 
     private void Start()
     {
-        rigidbody2D = GetComponent<Rigidbody2D>();
+        rb = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
+        gauge = 0f;
     }
 
     private void SetDamage(float _damage)
@@ -20,27 +22,26 @@ public class Enemy_Missile : MonoBehaviour
         damage = _damage;        
     }
 
-    public void SetColor(Color _color)
+    public void SetGauge(float _gague)
     {
-        spriteRenderer.color += _color;
+        gauge += _gague;
     }
 
-    public float GetColorAlpha()
+    public float GetGauge()
     {
-        return spriteRenderer.color.a;
+        return gauge;
     }
 
     public void Fire(float _speed, Vector2 _moveDir)
     {        
-        rigidbody2D.AddForce(_speed * _moveDir);
+        rb.AddForce(_speed * _moveDir);
     }
 
-    
-    private void OnTriggerEnter2D(Collider2D collision)
+    void OnTriggerEnter2D(Collider2D other)
     {
-        if(collision.tag == "Player")
-        {
-            Player player = collision.GetComponent<Player>();
+        if(other.gameObject.tag == "Player")
+        {            
+            Player player = other.gameObject.GetComponent<Player>();
             player.OnDamage(damage);
 
             Destroy(gameObject);

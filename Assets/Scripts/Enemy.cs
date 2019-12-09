@@ -41,17 +41,21 @@ public class Enemy : LivingObject
                 // HIT 효과 카메라 흔들림
                 if (isCritical)
                 {
-                    Popup.CreatePopup(transform.position, PopupType.CRITICAL);
-                    StartCoroutine(CameraShake.instance.ShakeCamera(0.01f, 0.1f));
+                    Popup.CreatePopup(transform.position, PopupType.CRITICAL);                    
+                    CameraShake.instance.SetCameraSake(3f, 3f, 0.15f);
                 }
                 else
                 {
                     Popup.CreatePopup(transform.position, PopupType.HIT);
-                    StartCoroutine(CameraShake.instance.ShakeCamera(0.01f, 0.05f));
+                    CameraShake.instance.SetCameraSake(1f, 1f, 0.15f);                    
                 }
 
                 // HP UI 감소 효과
                 healthBarFade.healthSystem.Damage((int)damage);
+
+                // Combo 효과
+                Combo.instance.ComboPlus();
+                Combo.instance.SetCombo();
                 
                 // 체력이 0 이하이고 죽지않았다면
                 if (HP <= 0 && !dead)

@@ -148,7 +148,7 @@ public class Range_Mummy : Enemy
 
     void Gauging()
     {
-        if (missile.GetColorAlpha() >= 1f)
+        if (missile.GetGauge() >= 1f)
         {
             Vector2 missileDir = (missileTarget.transform.position + new Vector3(0f, 0.5f, 0f) - missilePoint.position).normalized;
             float missileSpeed = 100f;
@@ -158,7 +158,7 @@ public class Range_Mummy : Enemy
             enemyState = EnemyState.ATTACK;
             return;
         }
-        missile.SetColor(new Color(0f, 0f, 0f, 30f / 255f));        
+        missile.SetGauge(0.1f);        
     }
 
     // Attack 애니메이션 이벤트 함수 -> 공격 게이지 시작

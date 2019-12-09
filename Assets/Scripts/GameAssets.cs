@@ -21,6 +21,8 @@ public class GameAssets : MonoBehaviour
     public Transform pfPlayerMissile;
     public Transform pfEnemyMissile;
     public Transform pfDashEffect;
+    public Transform pfSlash;
+    public Transform pfOuter2;
 
     public List<Transform> enemyList;
     public List<Sprite> abilitySprite;        

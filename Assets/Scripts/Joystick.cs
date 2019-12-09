@@ -17,7 +17,7 @@ public class Joystick : MonoBehaviour
     {
         background.SetActive(false);
         pointer.SetActive(false);
-        bgRadius = background.gameObject.GetComponent<Transform>().localScale.y / 2;
+        bgRadius = background.gameObject.GetComponent<Transform>().localScale.y / 2;        
     }
 
     private void Update()
@@ -80,7 +80,7 @@ public class Joystick : MonoBehaviour
     public Vector2 GetPlayerDir()
     {
         // 조이스틱이 반지름의 1/3을 넘어가면 
-        if (distance > (bgRadius / 3))
+        if (distance > (bgRadius / 2))
         {
             return moveDirection;        
         }
