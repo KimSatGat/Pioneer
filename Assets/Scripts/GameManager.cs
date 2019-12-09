@@ -39,6 +39,7 @@ public class GameManager : MonoBehaviour
     public int maxMonsterCount = 6;
 
     public GameObject abilityPanel;
+    public GameObject gate;
 
     private void Awake()    
     {
@@ -76,10 +77,10 @@ public class GameManager : MonoBehaviour
         }
 
         if(instance.wave3_enemies.childCount <= 0)
-        {
-            //ClearStage();
+        {            
             MakeStage();
             abilityPanel.SetActive(true);
+            gate.SetActive(true);
         }        
     }
 
@@ -98,15 +99,19 @@ public class GameManager : MonoBehaviour
     }
 
     // Wave3 까지 다 깼다면
-    void ClearStage()
+    public void ClearStage()
     {
         // 플레이어 원위치
         player.position = playerPosition.position;
         
         // 스테이지 레벨 상승
         instance.stageLevel++;
+
+        // 스테이지 갱신
+        instance.stageText.text = "STAGE " + instance.stageLevel;
+
         // 5단위인지 체크해서 최대 적 수 증가
-        if(instance.stageLevel % 5 == 0)
+        if (instance.stageLevel % 5 == 0)
         {
             instance.waveMonsterCount++;
             if(instance.waveMonsterCount > instance.maxMonsterCount)
@@ -114,6 +119,8 @@ public class GameManager : MonoBehaviour
                 instance.waveMonsterCount = instance.maxMonsterCount;
             }
         }
+
+        gate.SetActive(false);
     }
 
     // 다음 스테이지 생성
@@ -144,8 +151,5 @@ public class GameManager : MonoBehaviour
             instance.wave2_enemies.gameObject.SetActive(false);
             instance.wave3_enemies.gameObject.SetActive(false);
         }
-
-        // 스테이지 갱신
-        instance.stageText.text = "STAGE " + instance.stageLevel;
     }    
 }
