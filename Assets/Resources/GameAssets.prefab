@@ -59,7 +59,7 @@ MonoBehaviour:
   - {fileID: 7809536086607946711, guid: 50a8a1f4b6441044da6ff80a6f2a618d, type: 3}
   - {fileID: 5510866292492231205, guid: 15f3307cb05779b4cb3d4ce2a3ab7196, type: 3}
   abilitySprite:
-  - {fileID: 21300000, guid: aed1d16446446e5419cb3c2ec93d72b5, type: 3}
-  - {fileID: 21300000, guid: 4c7b5dbea029ddb41abac0a2fae3050d, type: 3}
-  - {fileID: 21300000, guid: 1bf4b1cda7106d94591a82538d1eeb98, type: 3}
-  - {fileID: 21300000, guid: 453121d464583c441b43006201913e7a, type: 3}
+  - {fileID: 21300000, guid: 020893328b7159144a46db5fdf471d9e, type: 3}
+  - {fileID: 21300000, guid: 8b8ad24dffe0182409d3bf9aeced4195, type: 3}
+  - {fileID: 21300000, guid: 0206e40230686d441aedfda196b17cd4, type: 3}
+  - {fileID: 21300000, guid: c89203a1d6dd6d44f904038535ba021e, type: 3}
