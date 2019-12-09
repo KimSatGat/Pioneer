@@ -55,9 +55,14 @@ public class Combo : MonoBehaviour
 
     public void SetCombo()
     {
-        comboText.color = originColor;
         alpha = 1f;
-
+        comboText.color = new Color(
+                originColor.r,
+                originColor.g,
+                originColor.b,
+                alpha
+                );
+        
         // 콤보 생성 시간 측정
         comboStartTime = Time.time;
             
