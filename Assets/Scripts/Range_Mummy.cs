@@ -213,6 +213,11 @@ public class Range_Mummy : Enemy
     
     void SetOnDeath()
     {
+        if(enemyState == EnemyState.GAUGING)
+        {
+            Destroy(missile.gameObject);
+        }
+
         animator.speed = 0f;
         StartCoroutine(SetDissolve());
         Destroy(gameObject, 1f);

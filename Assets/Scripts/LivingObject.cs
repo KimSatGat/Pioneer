@@ -51,6 +51,8 @@ public class LivingObject : MonoBehaviour
             onDeath();
         }
 
+        gameObject.tag = "Dead";
+
         // 사망 상태를 참으로 변경
         dead = true;
     }

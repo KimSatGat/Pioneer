@@ -7,12 +7,14 @@ public class Enemy_Missile : MonoBehaviour
 {    
     private float damage;
     private Rigidbody2D rb;
+    private BoxCollider2D boxCollider2D;
     private SpriteRenderer spriteRenderer;
     private float gauge;
 
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        boxCollider2D = GetComponent<BoxCollider2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         gauge = 0f;
     }
@@ -33,7 +35,8 @@ public class Enemy_Missile : MonoBehaviour
     }
 
     public void Fire(float _speed, Vector2 _moveDir)
-    {        
+    {
+        boxCollider2D.enabled = true;
         rb.AddForce(_speed * _moveDir);
     }
 
