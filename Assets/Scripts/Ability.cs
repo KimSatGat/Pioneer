@@ -68,7 +68,10 @@ public class Ability : MonoBehaviour
         else if(idx == 3)
         {
             Melee_Player melee_Player = FindObjectOfType<Melee_Player>();
-            melee_Player.RestoreHP(30f);            
+            melee_Player.RestoreHP(30f);
+            melee_Player.healthBarFade.healthSystem.SethealthAmount((int)melee_Player.HP);
+            melee_Player.healthBarFade.HealthStstem_OnHealed();
+            
         }
 
         // 패널 닫기

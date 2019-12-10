@@ -18,7 +18,7 @@ public class Melee_Player : Player
     private AudioSource audioSource;    // 플레이어 오디오소스
     private Rigidbody2D rb;
 
-    private HealthBarFade healthBarFade; // 체력바
+    public HealthBarFade healthBarFade; // 체력바
 
     private int criticalChance;         // 치명타 확률
     

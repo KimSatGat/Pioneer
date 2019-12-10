@@ -48,4 +48,9 @@ public class HealthSystem : MonoBehaviour
     {
         return (float)healthAmount / (float)healthAmountMax;
     }
+
+    public void SethealthAmount(int hp)
+    {
+        healthAmount = hp;
+    }
 }

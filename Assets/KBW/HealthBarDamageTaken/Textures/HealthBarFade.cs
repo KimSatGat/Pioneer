@@ -44,7 +44,7 @@ public class HealthBarFade : MonoBehaviour
         }
     }
 
-    private void HealthStstem_OnHealed()
+    public void HealthStstem_OnHealed()
     {
         SetHealth(healthSystem.GetHealthNormalized());
     }
