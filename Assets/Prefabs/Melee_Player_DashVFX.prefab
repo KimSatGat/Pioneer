@@ -104,7 +104,7 @@ MonoBehaviour:
   - {fileID: -3302721300341689717, guid: b0cd42ac925a88d44a36eeaf20979f48, type: 3}
   - {fileID: 7779410142802984294, guid: b0cd42ac925a88d44a36eeaf20979f48, type: 3}
   - {fileID: 2898635565320102218, guid: b0cd42ac925a88d44a36eeaf20979f48, type: 3}
-  framesPerSecond: 10
+  framesPerSecond: 20
   loop: 0
   useUnscaledDeltaTime: 0
   destroyOnLoop: 1
@@ -118,7 +118,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: e8789eb571602724784ba7403f9e7d99, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 614e12e2b99bc0e499626cf09b1019d8, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
