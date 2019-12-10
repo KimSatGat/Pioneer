@@ -43,8 +43,6 @@ public class GameManager : MonoBehaviour
 
     private void Awake()    
     {
-        SettingResolution();
-
         if (_instance == null)
         {
             _instance = FindObjectOfType<GameManager>();
@@ -77,27 +75,17 @@ public class GameManager : MonoBehaviour
         }
 
         if(instance.wave3_enemies.childCount <= 0)
-        {            
+        {
+            instance.wave1_enemies.gameObject.SetActive(false);
+            instance.wave2_enemies.gameObject.SetActive(false);
+            instance.wave3_enemies.gameObject.SetActive(false);
+
             MakeStage();
             abilityPanel.SetActive(true);
             gate.SetActive(true);
         }        
     }
-
-    // 해상도, 가로 모드 설정
-    void SettingResolution()
-    {
-        // 해상도 설정
-        Screen.SetResolution(Screen.width, Screen.width * 16 / 9, true);
-
-        // 가로 모드 설정
-        Screen.orientation = ScreenOrientation.AutoRotation;
-        Screen.autorotateToPortrait = false;
-        Screen.autorotateToPortraitUpsideDown = false;
-        Screen.autorotateToLandscapeLeft = true;
-        Screen.autorotateToLandscapeRight = true;
-    }
-
+    
     // Wave3 까지 다 깼다면
     public void ClearStage()
     {
@@ -120,6 +108,7 @@ public class GameManager : MonoBehaviour
             }
         }
 
+        instance.wave1_enemies.gameObject.SetActive(true);
         gate.SetActive(false);
     }
 

@@ -7315,20 +7315,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3714194666044688598}
-  - component: {fileID: 3714194666044688585}
-  - component: {fileID: 3714194666044688584}
   - component: {fileID: 3714194666044688587}
-  - component: {fileID: 3714194666044688586}
   - component: {fileID: 3714194666044688589}
-  - component: {fileID: 3714194666044688588}
-  - component: {fileID: 3714194666044688591}
-  - component: {fileID: 3714194666044688590}
   - component: {fileID: 3714194666044688577}
   - component: {fileID: 3714194666044688576}
   - component: {fileID: 1636904604169828993}
   - component: {fileID: 914057097473355334}
   m_Layer: 0
-  m_Name: melee_player
+  m_Name: Melee_Player
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7358,181 +7352,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3714194666044688585
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3714194666044688581}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c59db8c0956305f4da157acaa6dddae5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Front: {fileID: 3714194666752042637}
-  Back: {fileID: 3714194665058162002}
-  Left: {fileID: 3714194666098505633}
-  Right: {fileID: 3714194665668488715}
-  BodyColor: {r: 1, g: 0.78431374, b: 0.47058824, a: 1}
-  Parts:
-  - {fileID: 3714194666752042637}
-  - {fileID: 3714194665058162002}
-  - {fileID: 3714194666098505633}
-  - {fileID: 3714194665668488715}
-  Shadows:
-  - {fileID: 3714194665912559801}
-  - {fileID: 3714194666935477039}
-  - {fileID: 3714194666592875743}
-  - {fileID: 3714194666746088779}
---- !u!114 &3714194666044688584
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3714194666044688581}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e6dbda98e8614ec8a935809c1a0ace8a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Sprites:
-  - {fileID: 3714194666935477037}
-  - {fileID: 3714194666592875741}
-  - {fileID: 3714194666746088777}
-  - {fileID: 3714194665912559750}
-  - {fileID: 3714194665581515242}
-  - {fileID: 3714194665130523332}
-  - {fileID: 3714194667087043621}
-  - {fileID: 3714194665113681411}
-  - {fileID: 3714194665791249398}
-  - {fileID: 3714194665374886443}
-  - {fileID: 3714194666521890873}
-  - {fileID: 3714194666473240920}
-  - {fileID: 3714194666202727386}
-  - {fileID: 3714194665991121095}
-  - {fileID: 3714194665685845794}
-  - {fileID: 3714194665959669895}
-  - {fileID: 3714194666997587510}
-  - {fileID: 3714194665232993520}
-  - {fileID: 3714194665787742917}
-  - {fileID: 3714194666305472173}
-  - {fileID: 3714194665416181829}
-  - {fileID: 3714194665679215062}
-  - {fileID: 3714194667032002446}
-  - {fileID: 3714194665979502603}
-  - {fileID: 3714194665168942249}
-  - {fileID: 3714194665770640168}
-  - {fileID: 3714194665877749584}
-  - {fileID: 3714194666884431663}
-  - {fileID: 3714194665984260946}
-  - {fileID: 3714194666754383705}
-  - {fileID: 3714194666461666082}
-  - {fileID: 3714194666237885770}
-  - {fileID: 3714194666783148262}
-  - {fileID: 3714194665619259719}
-  - {fileID: 3714194666664788424}
-  - {fileID: 3714194666183878828}
-  - {fileID: 3714194665637174411}
-  - {fileID: 3714194666049330711}
-  - {fileID: 3714194665278447618}
-  - {fileID: 3714194665149682713}
-  - {fileID: 3714194665772305976}
-  - {fileID: 3714194666694703512}
-  - {fileID: 3714194666235791237}
-  - {fileID: 3714194665874832106}
-  - {fileID: 3714194665415023730}
-  - {fileID: 3714194666530002294}
-  - {fileID: 3714194666204381205}
-  - {fileID: 3714194666328840174}
-  - {fileID: 3714194666621213910}
-  - {fileID: 3714194665693703441}
-  - {fileID: 3714194665694918384}
-  - {fileID: 3714194665796234100}
-  - {fileID: 3714194665584210035}
-  - {fileID: 3714194665419170851}
-  - {fileID: 3714194665400796812}
-  - {fileID: 3714194666626984007}
-  - {fileID: 3714194665014957831}
-  - {fileID: 3714194666296803558}
-  - {fileID: 3714194667088927576}
-  - {fileID: 3714194665034788325}
-  - {fileID: 3714194665387561381}
-  - {fileID: 3714194665366363149}
-  - {fileID: 3714194666594650598}
-  - {fileID: 3714194665475029114}
-  - {fileID: 3714194665997603149}
-  - {fileID: 3714194665425604118}
-  - {fileID: 3714194666583070981}
-  - {fileID: 3714194666598330447}
-  - {fileID: 3714194667091196489}
-  - {fileID: 3714194665006928422}
-  - {fileID: 3714194666115910382}
-  - {fileID: 3714194666918254603}
-  - {fileID: 3714194665399485064}
-  - {fileID: 3714194666198422169}
-  - {fileID: 3714194665851561553}
-  - {fileID: 3714194665510757848}
-  - {fileID: 3714194665910394737}
-  - {fileID: 3714194666034653168}
-  - {fileID: 3714194666010238505}
-  - {fileID: 3714194665992903750}
-  - {fileID: 3714194665507389600}
-  - {fileID: 3714194666993820552}
-  - {fileID: 3714194667056000404}
-  - {fileID: 3714194666285678619}
-  - {fileID: 3714194666803167697}
-  - {fileID: 3714194665012093756}
-  - {fileID: 3714194666666352584}
-  - {fileID: 3714194667094394794}
-  - {fileID: 3714194666110196534}
-  - {fileID: 3714194665429412528}
-  - {fileID: 3714194665706727536}
-  - {fileID: 3714194665402426002}
-  - {fileID: 3714194666340236551}
-  - {fileID: 3714194664983038566}
-  - {fileID: 3714194666475464055}
-  - {fileID: 3714194666795260187}
-  - {fileID: 3714194665926284288}
-  - {fileID: 3714194665041617221}
-  - {fileID: 3714194666996082662}
-  - {fileID: 3714194666359248990}
-  - {fileID: 3714194666981683887}
-  - {fileID: 3714194665743910193}
-  - {fileID: 3714194665550279264}
-  - {fileID: 3714194665987011557}
-  - {fileID: 3714194667059608742}
-  - {fileID: 3714194666389357889}
-  - {fileID: 3714194665687044635}
-  - {fileID: 3714194665256855878}
-  - {fileID: 3714194665930934179}
-  - {fileID: 3714194666097469313}
-  - {fileID: 3714194666377680912}
-  - {fileID: 3714194666946160014}
-  - {fileID: 3714194666338933315}
-  - {fileID: 3714194666369304320}
-  - {fileID: 3714194666697837696}
-  - {fileID: 3714194666733156940}
-  - {fileID: 3714194666487602358}
-  - {fileID: 3714194665120325821}
-  - {fileID: 3714194665459375184}
-  - {fileID: 3714194666297534242}
-  - {fileID: 3714194665149111077}
-  - {fileID: 3714194665462199419}
-  - {fileID: 3714194666512810539}
-  - {fileID: 3714194665991667544}
-  - {fileID: 3714194666398411360}
-  - {fileID: 3714194665096327089}
-  - {fileID: 3714194667107618903}
-  - {fileID: 3714194665879091575}
-  - {fileID: 3714194666527907202}
-  - {fileID: 3714194666256735901}
-  - {fileID: 3714194666656515225}
-  SortingGroup: {fileID: 3714194666044688587}
-  SortingOrderOffset: 100
-  SortingOrderStep: 10
-  ZStep: 0.00001
 --- !u!210 &3714194666044688587
 SortingGroup:
   m_ObjectHideFlags: 0
@@ -7542,22 +7361,8 @@ SortingGroup:
   m_GameObject: {fileID: 3714194666044688581}
   m_Enabled: 1
   m_SortingLayerID: 639670713
-  m_SortingLayer: 3
+  m_SortingLayer: 0
   m_SortingOrder: 200
---- !u!114 &3714194666044688586
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3714194666044688581}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a803be54150222e44893e7f7e2c14849, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Character: {fileID: 3714194666044688585}
-  Animator: {fileID: 3714194666044688589}
 --- !u!95 &3714194666044688589
 Animator:
   serializedVersion: 3
@@ -7577,43 +7382,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &3714194666044688588
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3714194666044688581}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 25868e9adbb55514bab7bd9755b7c690, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  CharacterAnimation: {fileID: 3714194666044688586}
---- !u!114 &3714194666044688591
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3714194666044688581}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 07a219f3f28a3014ca16bf6b2f13111f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &3714194666044688590
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3714194666044688581}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 07a219f3f28a3014ca16bf6b2f13111f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!50 &3714194666044688577
 Rigidbody2D:
   serializedVersion: 4

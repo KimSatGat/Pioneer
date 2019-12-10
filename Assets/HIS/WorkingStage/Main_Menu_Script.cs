@@ -38,7 +38,7 @@ public class Main_Menu_Script : MonoBehaviour
         UI_Btn_Sound();
 
         Debug.Log("Start");
-        SceneManager.LoadScene("WorkingStage_HIS");
+        SceneManager.LoadScene("Main");
     }
     public void Game_Exit()
     {
