@@ -66,7 +66,12 @@ public class Range_Mummy : Enemy
             {
                 case EnemyState.IDLE:
                 case EnemyState.TRACE:
-                    DetectPlayer();  // 감지
+                    // 감지
+                    if (DetectPlayer())
+                    {
+                        break;
+                    }
+                    
                     TracePlayer();   // 감지한 플레이어한테 이동
                     break;
                 case EnemyState.GAUGING:
@@ -122,7 +127,7 @@ public class Range_Mummy : Enemy
         }
     }
 
-    void DetectPlayer()
+    bool DetectPlayer()
     {
         // 공격 감지 범위 구현
         Collider2D[] hits = Physics2D.OverlapBoxAll(detectPoint.position, detectRange, 0f);
@@ -136,14 +141,11 @@ public class Range_Mummy : Enemy
                 {
                     missileTarget = hit.gameObject.transform;
                     enemyState = EnemyState.ATTACK;
-                    return;                    
+                    return true;                    
                 }
             }
-            else
-            {
-                Debug.Log("플레이어 미발견");
-            }
         }
+        return false;
     }
 
     void Gauging()

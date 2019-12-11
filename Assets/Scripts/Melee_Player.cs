@@ -53,8 +53,7 @@ public class Melee_Player : Player
 
     void Start()
     {
-        //StartCoroutine("Attack");
-        //StartCoroutine("Dash");
+        onDeath += SetOnDeath;
     }
 
     private void FixedUpdate()
@@ -206,5 +205,12 @@ public class Melee_Player : Player
     public void SetAttackSpeed()
     {
         animator.SetFloat("AttackSpeed", attackSpeed);
+    }
+
+    void SetOnDeath()
+    {
+        animator.speed = 0f;
+        Destroy(gameObject, 1f);
+        GameManager.instance.GameOver();
     }
 }

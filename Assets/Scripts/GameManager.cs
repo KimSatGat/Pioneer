@@ -1,7 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -35,10 +37,12 @@ public class GameManager : MonoBehaviour
     // 스테이지 관리
     public TextMeshProUGUI stageText;
     public int stageLevel = 1;
-    public int waveMonsterCount = 1;
+    public int waveMonsterCount = 3;
     public int maxMonsterCount = 6;
 
     public GameObject abilityPanel;
+    public GameObject gameoverPanel;
+    public Text gameoverStageText;
     public GameObject gate;
 
     private void Awake()    
@@ -141,4 +145,25 @@ public class GameManager : MonoBehaviour
             instance.wave3_enemies.gameObject.SetActive(false);
         }
     }    
+
+    public void GameOver()
+    {
+        gameoverPanel.SetActive(true);
+        gameoverStageText.text = stageLevel.ToString();
+    }
+
+    public void Restart()
+    {
+        SceneManager.LoadScene("Main");
+    }
+
+    public void Home()
+    {
+        SceneManager.LoadScene("Lobby");
+    }
+
+    public void ExitGame()
+    {
+        Application.Quit();
+    }
 }

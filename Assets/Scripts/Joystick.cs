@@ -10,8 +10,9 @@ public class Joystick : MonoBehaviour
     private Vector2 touchPosition;
     private Vector2 moveDirection;
     private Vector3 dir;
-    private float bgRadius;
+    private float bgRadius;    
     private float distance;
+
 
     private void Start()
     {
@@ -64,23 +65,14 @@ public class Joystick : MonoBehaviour
         if (distance >= bgRadius)
         {
             pointer.transform.position = background.transform.position + (dir * bgRadius);
-        }          
-            /*
-            pointer.transform.position = new Vector2(
-                Mathf.Clamp(pointer.transform.position.x,
-                background.transform.position.x - bgRadius, // 0.7f
-                background.transform.position.x + bgRadius),
-                Mathf.Clamp(pointer.transform.position.y,
-                background.transform.position.y - bgRadius,
-                background.transform.position.y + bgRadius));
-                */       
+        }                      
         moveDirection = (pointer.transform.position - background.transform.position).normalized;        
     }
 
     public Vector2 GetPlayerDir()
     {
         // 조이스틱이 반지름의 1/3을 넘어가면 
-        if (distance > (bgRadius / 2))
+        if (distance > (bgRadius / 3))
         {
             return moveDirection;        
         }
