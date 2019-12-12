@@ -6,6 +6,10 @@ using EnumSpace;
 
 public class Popup : MonoBehaviour
 {
+    public AudioClip hitClip;
+    public AudioClip criticalHitClip;
+    private AudioSource audioSource;
+
     private const float DISAPPEAR_TIMER_MAX = 1f;
     private static int sortingOrder;
 
@@ -17,6 +21,7 @@ public class Popup : MonoBehaviour
     private void Awake()
     {
         textMesh = transform.GetComponent<TextMeshPro>();
+        audioSource = GetComponent<AudioSource>();
     }
 
     public void Setup(PopupType popupType)
@@ -27,11 +32,13 @@ public class Popup : MonoBehaviour
                 textMesh.SetText("HIT!");
                 textMesh.fontSize = 5;
                 textColor = new Color(1f, 197f / 255f, 0f);
+                audioSource.clip = hitClip;
                 break;
             case PopupType.CRITICAL:
                 textMesh.SetText("CRITICAL!");
                 textMesh.fontSize = 7;
                 textColor = new Color(1f, 55f / 255f, 0f);
+                audioSource.clip = criticalHitClip;
                 break;
             case PopupType.MISS:
                 textMesh.SetText("MISS~");
@@ -86,7 +93,7 @@ public class Popup : MonoBehaviour
         Transform hitPopupTransform = Instantiate(GameAssets.instance.pfPopup, position, Quaternion.identity);
         Popup hitPopup = hitPopupTransform.GetComponent<Popup>();
         hitPopup.Setup(popupType);
-
+        hitPopup.audioSource.Play();
         return hitPopup;        
     }        
 }

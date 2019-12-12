@@ -10,8 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1471432144868097948}
   - component: {fileID: 1471432144868097951}
-  - component: {fileID: 1471432144868097950}
   - component: {fileID: 3394208198039969697}
+  - component: {fileID: 5966970293283669461}
+  - component: {fileID: 3985013315342861202}
   m_Layer: 0
   m_Name: Melee_Player_DashVFX
   m_TagString: Untagged
@@ -83,31 +84,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &1471432144868097950
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1471432144868097953}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 05e9da4e8663e9445a79e216a49fd1e2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  frames:
-  - {fileID: -6869363547727107453, guid: b0cd42ac925a88d44a36eeaf20979f48, type: 3}
-  - {fileID: 290814651872424513, guid: b0cd42ac925a88d44a36eeaf20979f48, type: 3}
-  - {fileID: 8609947599563370655, guid: b0cd42ac925a88d44a36eeaf20979f48, type: 3}
-  - {fileID: 2042819968696190592, guid: b0cd42ac925a88d44a36eeaf20979f48, type: 3}
-  - {fileID: 2484291449045811995, guid: b0cd42ac925a88d44a36eeaf20979f48, type: 3}
-  - {fileID: -3302721300341689717, guid: b0cd42ac925a88d44a36eeaf20979f48, type: 3}
-  - {fileID: 7779410142802984294, guid: b0cd42ac925a88d44a36eeaf20979f48, type: 3}
-  - {fileID: 2898635565320102218, guid: b0cd42ac925a88d44a36eeaf20979f48, type: 3}
-  framesPerSecond: 20
-  loop: 0
-  useUnscaledDeltaTime: 0
-  destroyOnLoop: 1
 --- !u!82 &3394208198039969697
 AudioSource:
   m_ObjectHideFlags: 0
@@ -204,3 +180,34 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!95 &5966970293283669461
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1471432144868097953}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: da379d5bbd93c7940a3535f47b2c6e48, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &3985013315342861202
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1471432144868097953}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2fb31ca7c00b04d4ba4dd7340cd05e33, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
