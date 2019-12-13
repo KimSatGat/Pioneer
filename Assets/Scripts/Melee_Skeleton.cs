@@ -17,7 +17,7 @@ public class Melee_Skeleton : Enemy
     public Image attackGauge;           // 공격게이지 UI
     public Transform detectPoint;       // 공격 감지 피봇
     public Vector2 detectRange;         // 공격 감지 범위
-    public float[] lens = { 1.26f, 1.31f, 1.32f, 1.31f, 1.24f };   // 공격 감지 레이캐스트 마다 길이 할당 -> 기즈모로 직접 길이 구함..
+    public float[] lens = { 2.25f, 2.35f, 2.37f, 2.35f, 2.25f };   // 공격 감지 레이캐스트 마다 길이 할당 -> 기즈모로 직접 길이 구함..
     List<Vector2> dirs = new List<Vector2>();   // 공격 감지 방향 리스트
 
     private Animator animator;
@@ -108,7 +108,7 @@ public class Melee_Skeleton : Enemy
     {
         // Draw a yellow sphere at the transform's position
         Gizmos.color = new Color(1f, 1f, 0f, 0.3f);
-        Gizmos.DrawCube(detectPoint.position, detectRange);        
+        Gizmos.DrawCube(detectPoint.position, detectRange);
     }
 
     // n초 마다 가장 가까운 플레이어를 찾기

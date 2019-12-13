@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 5441616640817915011}
   - component: {fileID: 5581124028279114971}
   - component: {fileID: 1224576869316778391}
+  - component: {fileID: 3035738749025141866}
   m_Layer: 0
   m_Name: Popup
   m_TagString: Untagged
@@ -31,7 +32,7 @@ RectTransform:
   m_GameObject: {fileID: 5441616640817915010}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -315,3 +316,14 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!210 &3035738749025141866
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5441616640817915010}
+  m_Enabled: 1
+  m_SortingLayerID: 639670713
+  m_SortingLayer: 3
+  m_SortingOrder: 0

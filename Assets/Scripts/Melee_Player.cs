@@ -165,23 +165,19 @@ public class Melee_Player : Player
                 if (hit.tag == "Enemy")
                 {
                     Enemy enemy = hit.GetComponent<Enemy>();
-                    float hitPosY = enemy.GetPivot().y;
 
-                    float offsetPosY = Mathf.Abs(hitPosY - transform.position.y);
-                    if (offsetPosY <= 0.5f)
+                    bool isCritical;
+                    if (Random.Range(1, 101) < criticalChance)
                     {
-                        bool isCritical;
-                        if (Random.Range(1, 101) < criticalChance)
-                        {
-                            isCritical = true;
-                        }
-                        else
-                        {
-                            isCritical = false;
-                        }
-                        enemy.OnDamage(damage, PlayerType.MELEE, isCritical);
-                        Instantiate(GameAssets.instance.pfSlash, enemy.transform.position, Quaternion.identity);
+                        isCritical = true;
                     }
+                    else
+                    {
+                        isCritical = false;
+                    }
+                    enemy.OnDamage(damage, PlayerType.MELEE, isCritical);
+                    Instantiate(GameAssets.instance.pfSlash, enemy.transform.position, Quaternion.identity);
+
                 }
             }
         }

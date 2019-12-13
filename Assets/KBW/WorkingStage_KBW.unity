@@ -97,7 +97,7 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 1
+  m_UseShadowmask: 0
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -571,6 +571,26 @@ PrefabInstance:
       propertyPath: m_Name
       value: Melee_Player
       objectReference: {fileID: 0}
+    - target: {fileID: 914057097473355334, guid: ca569c9c590952d40b98985d0486ca77,
+        type: 3}
+      propertyPath: joystick
+      value: 
+      objectReference: {fileID: 1828028442}
+    - target: {fileID: 3906613130348883275, guid: ca569c9c590952d40b98985d0486ca77,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3906613130348883275, guid: ca569c9c590952d40b98985d0486ca77,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -5.48
+      objectReference: {fileID: 0}
+    - target: {fileID: 3906613130348883275, guid: ca569c9c590952d40b98985d0486ca77,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -17.63
+      objectReference: {fileID: 0}
     - target: {fileID: 3714194666044688598, guid: ca569c9c590952d40b98985d0486ca77,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -626,11 +646,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 914057097473355334, guid: ca569c9c590952d40b98985d0486ca77,
-        type: 3}
-      propertyPath: joystick
-      value: 
-      objectReference: {fileID: 1828028442}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ca569c9c590952d40b98985d0486ca77, type: 3}
 --- !u!1 &204386953
@@ -902,12 +917,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   abilityPanel: {fileID: 204386954}
   abilityText: {fileID: 953610895}
---- !u!4 &444651357 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 3714194666044688598, guid: ca569c9c590952d40b98985d0486ca77,
-    type: 3}
-  m_PrefabInstance: {fileID: 192751590}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -2348,7 +2357,7 @@ MonoBehaviour:
   m_Priority: 10
   m_StandbyUpdate: 2
   m_LookAt: {fileID: 0}
-  m_Follow: {fileID: 444651357}
+  m_Follow: {fileID: 0}
   m_Lens:
     FieldOfView: 40
     OrthographicSize: 7
@@ -2683,7 +2692,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 303b3343d02fec041b4c309736e04a92, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 444651357}
+  player: {fileID: 0}
   playerPosition: {fileID: 840441503}
   SpwanList:
   - {fileID: 627030963}
@@ -2718,6 +2727,8 @@ MonoBehaviour:
   waveMonsterCount: 1
   maxMonsterCount: 6
   abilityPanel: {fileID: 204386953}
+  gameoverPanel: {fileID: 0}
+  gameoverStageText: {fileID: 0}
   gate: {fileID: 1188795285}
 --- !u!1 &1482264106
 GameObject:

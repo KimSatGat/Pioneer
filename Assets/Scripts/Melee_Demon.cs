@@ -16,7 +16,7 @@ public class Melee_Demon : Enemy
     public Image attackGauge;           // 공격게이지 UI
     public Transform detectPoint;       // 공격 감지 피봇
     public Vector2 detectRange;         // 공격 감지 범위
-    public float[] lens = { 1.53f, 1.48f, 1.39f, 1.28f, 1.155f };   // 공격 감지 레이캐스트 마다 길이 할당 -> 기즈모로 직접 길이 구함..
+    public float[] lens = { 2.75f, 2.66f, 2.48f, 2.28f, 2.08f };   // 공격 감지 레이캐스트 마다 길이 할당 -> 기즈모로 직접 길이 구함..
     List<Vector2> dirs = new List<Vector2>();   // 공격 감지 방향 리스트
         
     private Animator animator;
@@ -109,7 +109,7 @@ public class Melee_Demon : Enemy
     {
         // Draw a yellow sphere at the transform's position
         Gizmos.color = new Color(1f, 1f, 0f, 0.3f);
-        Gizmos.DrawCube(detectPoint.position, detectRange);
+        Gizmos.DrawCube(detectPoint.position, detectRange);     
     }
     
     // n초 마다 가장 가까운 플레이어를 찾기

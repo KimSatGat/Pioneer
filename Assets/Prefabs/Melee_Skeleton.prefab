@@ -90,7 +90,7 @@ Transform:
   m_GameObject: {fileID: 3705555934289724367}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 2.07, y: 0.82, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.8, y: 1.8, z: 1.8}
   m_Children:
   - {fileID: 3705555935203862715}
   - {fileID: 3705555934803809185}
@@ -134,8 +134,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 639670713
-  m_SortingLayer: 3
+  m_SortingLayerID: -147126635
+  m_SortingLayer: 2
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 71a50cbdffaa9bd469581176b6d1c476, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -238,13 +238,13 @@ MonoBehaviour:
   attackUI: {fileID: 3983121833775975003}
   attackGauge: {fileID: 3983121834278598265}
   detectPoint: {fileID: 3705555934803809185}
-  detectRange: {x: 1, y: 1}
+  detectRange: {x: 1.6, y: 2.5}
   lens:
-  - 1.26
-  - 1.31
-  - 1.32
-  - 1.31
-  - 1.24
+  - 2.25
+  - 2.35
+  - 2.37
+  - 2.35
+  - 2.25
 --- !u!1 &3705555934803809214
 GameObject:
   m_ObjectHideFlags: 0
