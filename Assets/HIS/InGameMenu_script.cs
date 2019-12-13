@@ -36,7 +36,7 @@ public class InGameMenu_script :Main_Menu_Script
     {
         UI_Btn_Sound();
         //SceneManager.LoadScene("His");
-        SceneManager.LoadScene("WorkingStage_HIS");
+        SceneManager.LoadScene("Main");
         Time.timeScale = 1f;
     }
 
